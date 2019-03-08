@@ -1,0 +1,41 @@
+{
+  "name": "djwebmaster-vue",
+  "private": true,
+  "version": "1.0.0",
+  "description": "djwebmaster",
+  "config": {
+    "nuxt": {
+      "port": 3000
+    }
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nuxt-ts",
+    "build": "nuxt-ts build",
+    "start": "nuxt-ts start",
+    "generate": "nuxt-ts generate",
+    "lint": "tslint --project ."
+  },
+  "author": "alen",
+  "license": "MIT",
+  "dependencies": {
+    "@nuxt/config-edge": "latest",
+    "@nuxtjs/axios": "latest",
+    "axios": "latest",
+    "material-design-icons-iconfont": "latest",
+    "nuxt-ts": "latest",
+    "vue": "latest",
+    "vue-class-component": "latest",
+    "vue-property-decorator": "latest",
+    "vue-router": "latest",
+    "vuetify": "latest",
+    "vuetify-loader": "latest"
+  },
+  "devDependencies": {
+    "tslint-config-standard": "latest",
+    "stylus": "latest",
+    "stylus-loader": "latest",
+    "sass-loader": "latest",
+    "node-sass": "latest"
+  }
+}
