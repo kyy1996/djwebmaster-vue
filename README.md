@@ -11,6 +11,7 @@
 
 ```bash
 npm i
+./fix.sh
 npm run dev
 ```
 
@@ -22,6 +23,7 @@ npm run dev
 
 ```bash
 npm i
+./fix.sh
 npm run build
 NODE_ENV=production npm run start
 ```
