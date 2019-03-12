@@ -6,6 +6,7 @@
       :clipped="clipped"
       fixed
       app
+      v-if="false"
     >
       <v-toolbar flat class="transparent">
         <v-list class="pa-0">
@@ -41,7 +42,7 @@
       fixed
       app
     >
-      <v-toolbar-side-icon @click="drawer = !drawer"/>
+      <v-toolbar-side-icon @click="drawer = !drawer" disabled/>
       <v-btn
         @click.stop="miniVariant = !miniVariant"
         icon
@@ -62,37 +63,12 @@
       >
         <v-icon>wb_incandescent</v-icon>
       </v-btn>
-      <v-btn
-        @click.stop="rightDrawer = !rightDrawer"
-        icon
-      >
-        <v-icon>menu</v-icon>
-      </v-btn>
     </v-toolbar>
     <v-content>
       <v-container>
-        <!--<v-scroll-x-transition appear mode="out-in">-->
         <nuxt/>
-        <!--</v-scroll-x-transition>-->
       </v-container>
     </v-content>
-    <v-navigation-drawer
-      v-model="rightDrawer"
-      :right="right"
-      temporary
-      fixed
-    >
-      <v-list>
-        <v-list-tile @click.native="right = !right">
-          <v-list-tile-action>
-            <v-icon>
-              compare_arrowsz
-            </v-icon>
-          </v-list-tile-action>
-          <v-list-tile-title>Switch drawer (click me)</v-list-tile-title>
-        </v-list-tile>
-      </v-list>
-    </v-navigation-drawer>
     <v-footer
       height="auto"
       app
@@ -111,18 +87,12 @@
 </template>
 
 <script lang="ts">
-  import { Component, Vue } from 'vue-property-decorator';
-  import { VApp, VFooter, VNavigationDrawer } from 'vuetify/lib';
-
-  @Component({
-    components: {
-      VApp, VFooter, VNavigationDrawer
-    },
+  export default {
     data () {
       return {
         dark: false,
         clipped: false,
-        drawer: true,
+        drawer: false,
         fixed: false,
         items: [
           {
@@ -147,7 +117,5 @@
         title: '网页客研究会'
       };
     }
-  })
-  export default class DefaultLayoutPage extends Vue {
-  }
+  };
 </script>

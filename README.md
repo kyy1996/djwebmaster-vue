@@ -10,9 +10,9 @@
 2. Start development server
 
 ```bash
-npm i
+yarn
 ./fix.sh
-npm run dev
+yarn run dev
 ```
 
 #### Deploy for the production
@@ -22,8 +22,8 @@ npm run dev
 3. Start server
 
 ```bash
-npm i
+yarn
 ./fix.sh
-npm run build
-NODE_ENV=production npm run start
+yarn run build
+NODE_ENV=production yarn run start
 ```

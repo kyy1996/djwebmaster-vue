@@ -3,10 +3,9 @@ export const state = () => ({
 });
 
 export const mutations = {
-  loadMenu (state, menu: Array<any>) {
-    state.menu = menu;
-  },
-  unloadMenu (state) {
-    state.menu = null;
+  loadMenu (state, data: object) {
+    if (data.hasOwnProperty('data') && data['menu'] instanceof Array) {
+      state.menu = data['menu'];
+    }
   }
 };

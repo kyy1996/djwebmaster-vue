@@ -21,6 +21,12 @@ const config: NuxtConfiguration = {
     host: '0.0.0.0'
   },
   /*
+  ** Router config
+  */
+  router: {
+    middleware: 'authenticated'
+  },
+  /*
   ** Global CSS
   */
   css: [
@@ -28,7 +34,8 @@ const config: NuxtConfiguration = {
     'material-design-icons-iconfont/dist/material-design-icons.css'
   ],
   plugins: [
-    '@/plugins/vuetify'
+    '@/plugins/vuetify',
+    '@/plugins/axios'
   ],
   transition: {
     'name': 'scroll-x-transition',
@@ -41,13 +48,26 @@ const config: NuxtConfiguration = {
   */
   modules: [
     // Doc: https://axios.nuxtjs.org/usage
-    '@nuxtjs/axios'
+    '@nuxtjs/axios',
+    '@nuxtjs/proxy'
   ],
   /*
   ** Axios module configuration
   */
   axios: {
     // See https://github.com/nuxt-community/axios-module#options
+    // baseUrl: 'http://127.0.0.1',
+    // port: 8000,
+    prefix: '/api/',
+    proxy: true
+  },
+  proxy: {
+    '/api': {
+      target: 'http://127.0.0.1:8000'
+      // pathRewrite: {
+      //   '^/api': '/'
+      // }
+    }
   },
 
   /*
