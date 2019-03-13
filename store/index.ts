@@ -4,11 +4,11 @@ export const mutations = {};
 
 export const actions = {
   nuxtServerInit ({ commit }) {
-    const randomNumber = Math.round(Math.random() * 10);
-    if (randomNumber % 2 === 0) {
-      commit('user/loginUser', {
-        'name': 'test' + randomNumber
-      });
+    if (process.client && window) {
+      const userJson = window.localStorage.get('user');
+      if (userJson) {
+        commit('user/loginUser', JSON.parse(userJson));
+      }
     }
   }
 };

@@ -28,11 +28,10 @@
               @click:append="form.password.show = !form.password.show"
             ></v-text-field>
           </v-card-text>
-
           <v-card-actions>
             <v-btn color="grey" flat @click.prevent="reset">重置</v-btn>
             <v-spacer></v-spacer>
-            <v-btn color="primary" flat :disabled="!form.valid" type="submit">登录</v-btn>
+            <v-btn :loading="loading" color="primary" flat :disabled="!form.valid" type="submit">登录</v-btn>
           </v-card-actions>
         </v-card>
       </v-form>
@@ -40,7 +39,6 @@
     <v-snackbar
       v-model="snackbar.show"
       :color="snackbar.color"
-      :multi-line="snackbar.mode === 'multi-line'"
       :timeout="snackbar.timeout"
     >
       {{ snackbar.text }}
@@ -56,13 +54,22 @@
 
 <script lang="ts">
   import { Component, Vue } from 'vue-property-decorator';
-  import { VTextField } from 'vuetify/lib';
+  import { VTextField, VCard, VCardText, VCardActions, VSnackbar } from 'vuetify/lib';
   import CommonUserAuthService from '~/services/user/auth';
 
   @Component({
     name: 'login',
     layout: 'empty',
-    components: { VTextField },
+    components: { VTextField, VCard, VCardText, VCardActions, VSnackbar },
+    mounted () {
+      if (window && window.localStorage) {
+        const userJson = window.localStorage.getItem('user') || '';
+        if (userJson.length > 0) {
+          this.$store.commit('user/loginUser', JSON.parse(userJson));
+          this.$router.push('/');
+        }
+      }
+    },
     data () {
       return {
         user: {
@@ -80,18 +87,29 @@
           text: '',
           timeout: 5000,
           color: 'error'
-        }
+        },
+        loading: false
       };
     },
     methods: {
-      submit (): Promise | false {
+      submit (): Promise<any> | false {
         if (this.$refs.form.validate()) {
+          this.loading = true;
+          this.snackbar.show = false;
           (new CommonUserAuthService(this.$axios)).login(this.user).then(response => {
             const data = response.data;
             this.snackbar.color = data.code !== 0 ? 'error' : 'success';
             this.snackbar.show = true;
             this.snackbar.text = data.msg;
-          });
+            if (data.code === 0) {
+              this.$store.commit('user/loginUser', data.data);
+              this.$router.push('/');
+            }
+          }).catch(reason => {
+            this.snackbar.color = 'error';
+            this.snackbar.show = true;
+            this.snackbar.text = reason.response ? reason.response.data.msg || '服务器超时' : reason.message;
+          }).finally(() => this.loading = false);
         }
         return false;
       },

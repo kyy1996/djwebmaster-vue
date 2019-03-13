@@ -1,7 +1,7 @@
 <template>
   <div>
     <h2>index</h2>
-    <p v-if="isLogin">user: {{ user.name }}</p>
+    <p v-if="isLogin">user: {{ user }}</p>
     <nuxt-link v-else to="about">about</nuxt-link>
   </div>
 </template>
