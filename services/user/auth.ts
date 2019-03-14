@@ -1,4 +1,5 @@
 import BaseService from '~/services/BaseService';
+import { AxiosInstance } from '~/node_modules/axios';
 
 interface UserCredential {
   username: string;
@@ -6,6 +7,11 @@ interface UserCredential {
 }
 
 export default class CommonUserAuthService extends BaseService {
+
+  constructor ($axios: AxiosInstance) {
+    super($axios);
+  }
+
   public login (user: UserCredential) {
     return this.axios.post('/ajax/common/auth/login', user);
   }

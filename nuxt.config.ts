@@ -24,7 +24,7 @@ const config: NuxtConfiguration = {
   ** Router config
   */
   router: {
-    middleware: 'authenticated'
+    middleware: []
   },
   /*
   ** Global CSS
@@ -35,7 +35,9 @@ const config: NuxtConfiguration = {
   ],
   plugins: [
     '@/plugins/vuetify',
-    '@/plugins/axios'
+    '@/plugins/axios',
+    '@/plugins/components',
+    '@/plugins/theme'
   ],
   transition: {
     'name': 'scroll-x-transition',

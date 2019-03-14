@@ -14,6 +14,8 @@ export const mutations = {
   logoutUser (state) {
     state.user = null;
     state.isLogin = false;
-    window.localStorage.removeItem('user');
+    if (process.client && window) {
+      window.localStorage.removeItem('user');
+    }
   }
 };

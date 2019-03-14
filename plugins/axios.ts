@@ -32,7 +32,9 @@ export default function ({ $axios, store, req, redirect }) {
     }
     if (data.code === 10011) {
       // 用户未登录
-      window.localStorage.clear();
+      if (process.client) {
+        window.localStorage.clear();
+      }
       store.commit('user/logoutUser');
       redirect('/common/user/login');
     }

@@ -1,7 +1,6 @@
 import Vue from 'vue';
-import Vuetify from 'vuetify/lib';
+import Vuetify, { VApp, VSnackbar, VFooter, VBtn, VBreadcrumbs } from 'vuetify/lib';
 import colors from 'vuetify/es5/util/colors';
-import { VApp, VSnackbar, VFooter, VBtn, VBreadcrumbs } from 'vuetify/lib';
 
 Vue.use(Vuetify, {
   theme: {

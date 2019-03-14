@@ -1,153 +1,28 @@
 <template>
-  <v-app :dark="dark">
-    <v-navigation-drawer
-      v-model="drawer"
-      :mini-variant="miniVariant"
-      :clipped="clipped"
-      fixed
-      app
-    >
-      <v-toolbar flat class="transparent">
-        <v-list class="pa-0">
-          <v-list-tile avatar>
-            <v-list-tile-avatar>
-              <img src="https://randomuser.me/api/portraits/men/85.jpg" alt="网页客研究会">
-            </v-list-tile-avatar>
-            <v-list-tile-content>
-              <v-list-tile-title>网页客研究会</v-list-tile-title>
-            </v-list-tile-content>
-          </v-list-tile>
-        </v-list>
-      </v-toolbar>
-      <v-list>
-        <v-list-tile
-          v-for="(item, i) in items"
-          :key="i"
-          :to="item.to"
-          router
-          exact
-        >
-          <v-list-tile-action>
-            <v-icon>{{ item.icon }}</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content>
-            <v-list-tile-title v-text="item.title"/>
-          </v-list-tile-content>
-        </v-list-tile>
-      </v-list>
-    </v-navigation-drawer>
-    <v-toolbar
-      :clipped-left="clipped"
-      fixed
-      app
-    >
-      <v-toolbar-side-icon @click="drawer = !drawer"/>
-      <v-btn
-        @click.stop="miniVariant = !miniVariant"
-        icon
-      >
-        <v-icon>{{ `chevron_${miniVariant ? 'right' : 'left'}` }}</v-icon>
-      </v-btn>
-      <v-btn
-        @click.stop="fixed = !fixed"
-        icon
-      >
-        <v-icon>remove</v-icon>
-      </v-btn>
-      <v-toolbar-title v-text="title"/>
-      <v-spacer/>
-      <v-btn
-        @click.stop="dark = !dark"
-        icon
-      >
-        <v-icon>wb_incandescent</v-icon>
-      </v-btn>
-      <v-btn
-        @click.stop="rightDrawer = !rightDrawer"
-        icon
-      >
-        <v-icon>menu</v-icon>
-      </v-btn>
-    </v-toolbar>
-    <v-content>
-      <v-container>
-        <!--<v-scroll-x-transition appear mode="out-in">-->
-        <nuxt/>
-        <!--</v-scroll-x-transition>-->
-      </v-container>
-    </v-content>
-    <v-navigation-drawer
-      v-model="rightDrawer"
-      :right="right"
-      temporary
-      fixed
-    >
-      <v-list>
-        <v-list-tile @click.native="right = !right">
-          <v-list-tile-action>
-            <v-icon>
-              compare_arrowsz
-            </v-icon>
-          </v-list-tile-action>
-          <v-list-tile-title>Switch drawer (click me)</v-list-tile-title>
-        </v-list-tile>
-      </v-list>
-    </v-navigation-drawer>
-    <v-footer
-      height="auto"
-      app
-      :fixed="fixed"
-    >
-      <v-card
-        class="flex"
-        tile
-      >
-        <v-card-text>
-          &copy;2018&nbsp;网页客研究会
-        </v-card-text>
-      </v-card>
-    </v-footer>
+  <v-app>
+    <core-drawer></core-drawer>
+    <core-toolbar></core-toolbar>
+    <core-view></core-view>
+    <core-filter></core-filter>
   </v-app>
 </template>
 
-<script lang="ts">
-  import { Component, Vue } from 'vue-property-decorator';
-  import { VApp, VFooter, VNavigationDrawer } from 'vuetify/lib';
-
-  @Component({
-    components: {
-      VApp, VFooter, VNavigationDrawer
-    },
-    data () {
-      return {
-        dark: false,
-        clipped: false,
-        drawer: true,
-        fixed: false,
-        items: [
-          {
-            icon: 'apps',
-            title: '首页',
-            to: '/'
-          },
-          {
-            icon: 'person',
-            title: '用户',
-            to: '/user'
-          },
-          {
-            icon: 'bubble_chart',
-            title: 'Inspire',
-            to: '/inspire'
-          }
-        ],
-        miniVariant: false,
-        right: true,
-        rightDrawer: false,
-        title: '网页客研究会'
-      };
-    }
-  })
-  export default class DefaultLayoutPage extends Vue {
+<style lang="scss">
+  /* Remove in 1.2 */
+  .v-datatable thead th.column.sortable i {
+    vertical-align: unset;
   }
+</style>
+
+<script>
+  import CoreDrawer from '@/components/core/Drawer';
+  import CoreToolbar from '@/components/core/Toolbar';
+  import CoreView from '@/components/core/View';
+  import CoreFilter from '@/components/core/Filter';
+
+  export default {
+    components: {
+      CoreDrawer, CoreToolbar, CoreView, CoreFilter
+    }
+  };
 </script>

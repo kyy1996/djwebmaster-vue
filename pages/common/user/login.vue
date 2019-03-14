@@ -29,9 +29,17 @@
             ></v-text-field>
           </v-card-text>
           <v-card-actions>
-            <v-btn color="grey" flat @click.prevent="reset">重置</v-btn>
+            <v-btn
+              color="grey"
+              @click.prevent="reset">
+              重置
+            </v-btn>
             <v-spacer></v-spacer>
-            <v-btn :loading="loading" color="primary" flat :disabled="!form.valid" type="submit">登录</v-btn>
+            <v-btn
+              :loading="loading"
+              color="success" :disabled="!form.valid" type="submit">
+              登录
+            </v-btn>
           </v-card-actions>
         </v-card>
       </v-form>
@@ -52,9 +60,9 @@
   </v-layout>
 </template>
 
-<script lang="ts">
+<script>
   import { Component, Vue } from 'vue-property-decorator';
-  import { VTextField, VCard, VCardText, VCardActions, VSnackbar } from 'vuetify/lib';
+  import { VCard, VCardActions, VCardText, VSnackbar, VTextField } from 'vuetify/lib';
   import CommonUserAuthService from '~/services/user/auth';
 
   @Component({
@@ -66,7 +74,7 @@
         const userJson = window.localStorage.getItem('user') || '';
         if (userJson.length > 0) {
           this.$store.commit('user/loginUser', JSON.parse(userJson));
-          this.$router.push('/');
+          // this.$router.push('/');
         }
       }
     },
@@ -92,7 +100,7 @@
       };
     },
     methods: {
-      submit (): Promise<any> | false {
+      submit () {
         if (this.$refs.form.validate()) {
           this.loading = true;
           this.snackbar.show = false;
@@ -105,15 +113,15 @@
               this.$store.commit('user/loginUser', data.data);
               this.$router.push('/');
             }
-          }).catch(reason => {
+          }).finally(() => this.loading = false).catch(reason => {
             this.snackbar.color = 'error';
             this.snackbar.show = true;
             this.snackbar.text = reason.response ? reason.response.data.msg || '服务器超时' : reason.message;
-          }).finally(() => this.loading = false);
+          });
         }
         return false;
       },
-      reset (): true {
+      reset () {
         this.$refs.form.reset();
         return true;
       }
