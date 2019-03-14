@@ -33,9 +33,11 @@
 </template>
 
 <script lang="ts">
-  import { Component, Vue } from 'vue-property-decorator';
-
-  @Component({
+  export default {
+    async asyncData ({ $axios }) {
+      const response = await $axios.get('/page/admin/common/welcome/index');
+      return response.data.data;
+    },
     computed: {
       cards () {
         return [
@@ -66,9 +68,7 @@
         ];
       }
     }
-  })
-  export default class IndexPage extends Vue {
-  }
+  };
 </script>
 
 <style scoped>
