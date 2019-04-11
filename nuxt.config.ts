@@ -1,4 +1,4 @@
-import NuxtConfiguration from '@nuxt/config-edge';
+import NuxtConfiguration from '@nuxt/config';
 
 import VuetifyLoaderPlugin from 'vuetify-loader/lib/plugin';
 
