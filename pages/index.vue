@@ -1,38 +1,41 @@
 <template>
   <v-container
-    grid-list-md
     fill-height
+    fluid
+    grid-list-xl
   >
-    <v-layout row wrap justify-center align-content-center>
-      <v-flex xs12 mb-4>
-        <h3 class="text-xs-center font-weight-regular display-2">功能目录</h3>
+    <v-layout wrap>
+      <v-flex
+        xs12
+        md6
+      >
+        <material-stats-card
+          color="red"
+          icon="person"
+          title="用户量"
+          value="75"
+          sub-icon=""
+          sub-text=""
+        />
       </v-flex>
       <v-flex
-        v-for="card in cards"
-        :key="card.name"
-        md4 lg3 xs12
+        xs12
+        md6
       >
-        <v-card
-          :to="card.path"
-          ripple
-        >
-          <v-responsive aspect-ratio="1">
-            <v-container fill-height fluid>
-              <v-layout justify-center align-center>
-                <v-card-text class="text-xs-center">
-                  <v-icon size="80" color="primary">{{ card.icon }}</v-icon>
-                  <h3 class="headline font-weight-regular primary--text">{{ card.title }}</h3>
-                </v-card-text>
-              </v-layout>
-            </v-container>
-          </v-responsive>
-        </v-card>
+        <material-stats-card
+          color="info"
+          icon="description"
+          title="文章"
+          value="245"
+          sub-icon=""
+          sub-text=""
+        />
       </v-flex>
     </v-layout>
   </v-container>
 </template>
 
-<script lang="ts">
+<script>
   export default {
     async asyncData ({ $axios }) {
       const response = await $axios.get('/page/admin/common/welcome/index');

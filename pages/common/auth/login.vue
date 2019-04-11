@@ -1,48 +1,59 @@
 <template>
   <v-layout>
     <v-flex xs12 sm8 offset-sm2 lg6 offset-lg3 xl4 offset-xl4>
-      <v-form ref="form" v-model="form.valid" lazy-validation @submit.prevent="submit" @reset="this.resetValidation()">
-        <v-card>
-          <v-img
-            src="https://cdn.vuetifyjs.com/images/cards/desert.jpg"
-            aspect-ratio="2"
-          ></v-img>
-
-          <v-card-title primary-title>
-            <h3 class="headline mb-0">登录</h3>
-          </v-card-title>
-          <v-card-text>
-            <v-text-field
-              v-model="user.username"
-              :rules="[v => !!v || '请输入登录用户名']"
-              label="UID/EMAIL/手机号/学号"
-              required
-            ></v-text-field>
-            <v-text-field
-              v-model="user.password"
-              :append-icon="form.password.show ? 'visibility' : 'visibility_off'"
-              :type="form.password.show ? 'text' : 'password'"
-              :rules="[v => !!v || '请输入密码', v => (v && v.length>=6) || '密码长度至少6位']"
-              label="密码"
-              required
-              @click:append="form.password.show = !form.password.show"
-            ></v-text-field>
-          </v-card-text>
-          <v-card-actions>
-            <v-btn
-              color="grey"
-              @click.prevent="reset">
-              重置
-            </v-btn>
-            <v-spacer></v-spacer>
-            <v-btn
-              :loading="loading"
-              color="success" :disabled="!form.valid" type="submit">
-              登录
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-form>
+      <material-card
+        color="green"
+        title='登录'
+        text="登录以使用系统"
+      >
+        <v-img
+          src="https://cdn.vuetifyjs.com/images/cards/desert.jpg"
+          aspect-ratio="2"
+        ></v-img>
+        <v-form ref="form" v-model="form.valid" lazy-validation @submit.prevent="submit"
+                @reset="this.resetValidation()">
+          <v-container>
+            <v-layout wrap>
+              <v-flex xs12>
+                <v-text-field
+                  v-model="user.username"
+                  :rules="[v => !!v || '请输入登录用户名']"
+                  label="UID/EMAIL/手机号/学号"
+                  color="purple"
+                  required
+                ></v-text-field>
+              </v-flex>
+              <v-flex xs12>
+                <v-text-field
+                  v-model="user.password"
+                  :append-icon="form.password.show ? 'visibility' : 'visibility_off'"
+                  :type="form.password.show ? 'text' : 'password'"
+                  :rules="[v => !!v || '请输入密码', v => (v && v.length>=6) || '密码长度至少6位']"
+                  label="密码"
+                  color="purple"
+                  required
+                  @click:append="form.password.show = !form.password.show"
+                ></v-text-field>
+              </v-flex>
+              <v-flex md6>
+                <v-btn
+                  color="grey"
+                  flat
+                  @click.prevent="reset">
+                  重置
+                </v-btn>
+              </v-flex>
+              <v-flex md6 text-md-right>
+                <v-btn
+                  :loading="loading"
+                  color="success" :disabled="!form.valid" type="submit">
+                  登录
+                </v-btn>
+              </v-flex>
+            </v-layout>
+          </v-container>
+        </v-form>
+      </material-card>
     </v-flex>
     <v-snackbar
       v-model="snackbar.show"
@@ -63,18 +74,18 @@
 <script>
   import { Component, Vue } from 'vue-property-decorator';
   import { VCard, VCardActions, VCardText, VSnackbar, VTextField } from 'vuetify/lib';
+  import MaterialCard from '~/components/material/Card';
   import CommonUserAuthService from '~/services/user/auth';
 
   @Component({
     name: 'login',
     layout: 'empty',
-    components: { VTextField, VCard, VCardText, VCardActions, VSnackbar },
+    components: { VTextField, VCard, VCardText, VCardActions, VSnackbar, MaterialCard },
     mounted () {
       if (window && window.localStorage) {
         const userJson = window.localStorage.getItem('user') || '';
         if (userJson.length > 0) {
           this.$store.commit('user/loginUser', JSON.parse(userJson));
-          // this.$router.push('/');
         }
       }
     },

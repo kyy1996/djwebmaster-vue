@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Vuetify, { VApp, VSnackbar, VFooter, VBtn, VBreadcrumbs } from 'vuetify/lib';
 import colors from 'vuetify/es5/util/colors';
+import { en, zhHans } from 'vuetify/lib/locale';
 
 Vue.use(Vuetify, {
   theme: {
@@ -14,5 +15,12 @@ Vue.use(Vuetify, {
   },
   components: {
     VApp, VSnackbar, VFooter, VBtn, VBreadcrumbs
+  },
+  lang: {
+    locales: {
+      zhHans,
+      en
+    },
+    current: 'zhHans'
   }
 });

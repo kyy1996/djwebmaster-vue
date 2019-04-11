@@ -165,3 +165,7 @@ $border-radius-dropdown:            10px !default;
 
 // Box-shadow
 $box-shadow-general:                0 2px 5px 0 rgba($black, .26);
+
+// Transitions
+$primary-transition:                0.3s cubic-bezier(.25,.8,.50,1);
+$secondary-transition:              0.2s cubic-bezier(0.4, 0.0, 0.6, 1);

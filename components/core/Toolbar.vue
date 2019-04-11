@@ -18,7 +18,7 @@
         >
           <v-icon>menu</v-icon>
         </v-btn>
-        {{ title }}
+        {{ pageTitle }}
       </v-toolbar-title>
     </div>
 
@@ -42,43 +42,30 @@
           content-class="dropdown-menu"
           offset-y
           transition="slide-y-transition">
-          <nuxt-link
-            v-ripple
+          <router-link
             slot="activator"
+            v-ripple
             class="toolbar-items"
             to
+            @click.prevent="false"
           >
-            <v-badge
-              color="error"
-              overlap
+            <v-icon color="tertiary">person</v-icon>
+          </router-link>
+          <v-list>
+            <v-list-tile
+              to="/user/user/my"
+              replace
+              nuxt
             >
-              <template slot="badge">
-                {{ notifications.length }}
-              </template>
-              <v-icon color="tertiary">notifications</v-icon>
-            </v-badge>
-          </nuxt-link>
-          <v-card>
-            <v-list dense>
-              <v-list-tile
-                v-for="notification in notifications"
-                :key="notification"
-                @click="onClick"
-              >
-                <v-list-tile-title
-                  v-text="notification"
-                />
-              </v-list-tile>
-            </v-list>
-          </v-card>
+              <v-list-tile-title>个人资料</v-list-tile-title>
+            </v-list-tile>
+            <v-list-tile
+              @click="logout"
+            >
+              <v-list-tile-title>注销</v-list-tile-title>
+            </v-list-tile>
+          </v-list>
         </v-menu>
-        <router-link
-          v-ripple
-          class="toolbar-items"
-          to="/user"
-        >
-          <v-icon color="tertiary">person</v-icon>
-        </router-link>
       </v-flex>
     </v-toolbar-items>
   </v-toolbar>
@@ -89,6 +76,7 @@
   import { directives } from 'vuetify/lib';
 
   const { mapMutations } = createNamespacedHelpers('layout');
+  const { mapState } = createNamespacedHelpers('menu');
   const VRipple = directives.Ripple;
 
   export default {
@@ -104,21 +92,9 @@
       responsive: false,
       responsiveInput: false
     }),
-    computed: {
-      title: {
-        get () {
-          return this.$route.name;
-        },
-        set (val) {
-          return val;
-        }
-      }
-    },
 
-    watch: {
-      '$route' (val) {
-        this.title = val.name;
-      }
+    computed: {
+      ...mapState(['pageTitle'])
     },
 
     mounted () {
@@ -145,6 +121,11 @@
           this.responsive = false;
           this.responsiveInput = true;
         }
+      },
+      logout () {
+        this.$axios.post('/ajax/common/auth/logout').finally(() => {
+          this.$router.push('/');
+        });
       }
     }
   };

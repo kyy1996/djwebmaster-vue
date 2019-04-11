@@ -20,6 +20,7 @@
     "axios": "^0.18.0",
     "lodash": "latest",
     "material-design-icons-iconfont": "^4.0.5",
+    "mavon-editor": "^2.7.3",
     "nuxt-ts": "^2.4.5",
     "vue": "^2.6.8",
     "vue-chartist": "^2.2.0",

@@ -35,9 +35,11 @@ const config: NuxtConfiguration = {
   ],
   plugins: [
     '@/plugins/vuetify',
+    '@/plugins/router',
     '@/plugins/axios',
     '@/plugins/components',
-    '@/plugins/theme'
+    '@/plugins/theme',
+    { src: '@/plugins/mavonEditor', ssr: false }
   ],
   transition: {
     'name': 'scroll-x-transition',

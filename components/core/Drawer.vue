@@ -1,7 +1,7 @@
 <template>
   <v-navigation-drawer
     id="app-drawer"
-    v-model="showDrawer"
+    :value="drawer"
     fixed
     app
     floating
@@ -34,21 +34,61 @@
           </v-list-tile-title>
         </v-list-tile>
         <v-divider></v-divider>
-        <v-list-tile
-          v-for="(item, i) in items"
-          :key="i"
-          :to="item.to"
-          :active-class="color"
-          avatar
-          class="v-list-item"
+        <template
+          v-for="(item) in menu.main"
         >
-          <v-list-tile-action>
-            <v-icon>{{ item.icon }}</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-title
-            v-text="item.title"
-          />
-        </v-list-tile>
+          <v-list-tile
+            v-if="!item._child"
+            :to="item.url"
+            :active-class="color"
+            avatar
+            router
+            exact
+            nuxt
+            class="v-list-item"
+          >
+            <v-list-tile-action>
+              <v-icon>{{ item.icon_class }}</v-icon>
+            </v-list-tile-action>
+            <v-list-tile-title
+              v-text="item.title"
+            />
+          </v-list-tile>
+          <v-list-group
+            v-else
+            class="v-list-item"
+            :group="item.url"
+          >
+            <template v-slot:activator>
+              <v-list-tile
+                :active-class="color"
+              >
+                <v-list-tile-action>
+                  <v-icon>{{ item.icon_class }}</v-icon>
+                </v-list-tile-action>
+                <v-list-tile-content>
+                  <v-list-tile-title>{{ item.title }}</v-list-tile-title>
+                </v-list-tile-content>
+              </v-list-tile>
+            </template>
+            <v-list-tile
+              v-for="subItem in item._child"
+              :key="subItem.title"
+              :to="subItem.url"
+              :active-class="color"
+              router
+              exact
+              nuxt
+            >
+              <v-list-tile-action>
+                <v-icon>{{ subItem.icon_class }}</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title v-text="subItem.title" />
+              </v-list-tile-content>
+            </v-list-tile>
+          </v-list-group>
+        </template>
       </v-layout>
     </v-img>
   </v-navigation-drawer>
@@ -60,6 +100,7 @@
   import { createNamespacedHelpers } from 'vuex';
 
   const { mapState, mapMutations } = createNamespacedHelpers('layout');
+  const { mapState: mapMenuState } = createNamespacedHelpers('menu');
 
   export default {
     components: { VList },
@@ -74,12 +115,19 @@
         {
           to: '/user',
           icon: 'person',
-          title: 'User Profile'
-        },
-        {
-          to: '/table-list',
-          icon: 'clipboard-outline',
-          title: 'Table List'
+          title: 'User',
+          items: [
+            {
+              to: '/user',
+              icon: 'person',
+              title: 'User Profile'
+            },
+            {
+              to: '/table-list',
+              icon: 'clipboard-outline',
+              title: 'Table List'
+            }
+          ]
         },
         {
           to: '/typography',
@@ -106,14 +154,7 @@
     }),
     computed: {
       ...mapState(['image', 'color', 'drawer']),
-      showDrawer: {
-        get () {
-          return this.drawer;
-        },
-        set (val) {
-          this.setDrawer(val);
-        }
-      }
+      ...mapMenuState(['menu'])
     },
     mounted () {
       this.onResponsiveInverted();

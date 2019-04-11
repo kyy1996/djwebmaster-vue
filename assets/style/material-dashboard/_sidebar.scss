@@ -1,3 +1,5 @@
+@import "variables";
+
 .v-navigation-drawer {
   @include shadow-big();
 
@@ -5,14 +7,13 @@
     background: $sidebar-bg;
     padding: 0;
 
-    .v-list-item {
-      &:not(:nth-child(3)){
-        margin: $margin-small $margin-general 0;
-      }
+    .v-divider + [role=listitem] {
+      margin-top: 0;
+    }
 
-      &:nth-child(3) {
-        margin: 0 $margin-general;
-      }
+    & > [role=listitem], .v-list__group__header, .v-list__group__items > [role=listitem] {
+      margin: $margin-small $margin-general 0;
+      transition: background $primary-transition;
 
       & > .v-list__tile {
         padding: $padding-small $padding-general;
@@ -22,12 +23,12 @@
         &:active {
           background-color: $list-item-hover;
         }
+      }
 
-        .v-list__tile__title {
-          font-size: $font-size-general !important;
-          font-weight: $font-weight-lighter;
-          padding: 0;
-        }
+      .v-list__tile__title {
+        font-size: $font-size-general !important;
+        font-weight: $font-weight-lighter;
+        padding: 0;
       }
 
       .v-list__tile__action {
@@ -54,7 +55,7 @@
     }
 
     .v-list__tile__avatar {
-      margin-left: $margin-list-left;
+      margin-left: 0;
       margin-right: $margin-list-right;
       min-width: unset;
     }

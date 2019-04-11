@@ -20,8 +20,7 @@
     <div class="text-xs-right">
       <p
         class="category grey--text font-weight-light"
-        v-text="title"
-      />
+      >{{ title }}</p>
       <h3
         class="title display-1 font-weight-light">
         {{ value }}
@@ -40,20 +39,19 @@
       <span
         :class="subTextColor"
         class="caption font-weight-light"
-        v-text="subText"
-      />
+      >{{ subText }}</span>
     </template>
   </material-card>
 </template>
 
 <script>
-  import Card from './Card';
+  import MaterialCard from './Card';
 
   export default {
     inheritAttrs: false,
-
+    components: { MaterialCard },
     props: {
-      ...Card.props,
+      ...MaterialCard.props,
       icon: {
         type: String,
         required: true
@@ -103,7 +101,7 @@
       margin-left: 0;
       margin-right: auto;
       margin-bottom: 0 !important;
-      max-width: auto;
+      max-width: none;
       padding: 0 16px 0;
     }
 

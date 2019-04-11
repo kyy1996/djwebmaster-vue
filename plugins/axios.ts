@@ -26,6 +26,10 @@ export default function ({ $axios, store, req, redirect }) {
     const data = response.data;
     if (data.hasOwnProperty('menu') && data['menu']) {
       store.commit('menu/loadMenu', data['menu']);
+      if (process.server) {
+        // 渲染pageTitle
+        store.dispatch('menu/checkPageTitle', req.url);
+      }
     }
     if (data.hasOwnProperty('user') && data['user']) {
       store.commit('user/loginUser', data['user']);
@@ -36,7 +40,7 @@ export default function ({ $axios, store, req, redirect }) {
         window.localStorage.clear();
       }
       store.commit('user/logoutUser');
-      redirect('/common/user/login');
+      redirect('/common/auth/login');
     }
   });
 }
