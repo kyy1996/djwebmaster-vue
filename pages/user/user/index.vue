@@ -11,7 +11,7 @@
       <v-flex
         md12
       >
-        <v-btn color="primary" @click.prevent="openEditModal">
+        <v-btn color="primary" @click.prevent="openEditModal()">
           新用户
         </v-btn>
         <material-card
@@ -73,13 +73,13 @@
                 <v-icon
                   small
                   class="mr-2"
-                  @click="openEditModal(item)"
+                  @click="openEditModal(item.uid)"
                 >
                   edit
                 </v-icon>
                 <v-icon
                   small
-                  @click="deleteItem(item)"
+                  @click="deleteItem(item.uid)"
                 >
                   delete
                 </v-icon>
@@ -114,148 +114,145 @@
   </v-container>
 </template>
 
-<script>
-  import VUserEditorModal from '~/components/user/EditorModal';
-  import MaterialCard from '~/components/material/Card';
+<script lang="ts">
+  import VUserEditorModal from '~/components/user/user/EditorModal.vue';
+  import MaterialCard from '~/components/material/Card.vue';
+  import { Vue, Component, Watch } from 'vue-property-decorator';
 
-  export default {
+  @Component({
     async asyncData ({ $axios }) {
-      const response = await $axios.get('/page/admin/user/userprofile/index');
-      const { data } = response.data;
+      const response = await $axios.get('/page/admin/user/userProfile/index');
+      const { data } = response.data as { data: { items: any[], page_info: any } };
       return {
-        total: data.page_info.total || 0,
+        total: (data.page_info || {}).total || 0,
         items: data.items || []
       };
     },
     components: { MaterialCard, VUserEditorModal },
-    data: () => ({
-      dialog: false,
-      pageLoading: true,
-      pagination: {
-        rowsPerPage: 25
+  })
+  export default class UserUserIndexPage extends Vue {
+    loading: boolean = false;
+    pageLoading: boolean = true;
+    pagination: any | { page: number; rowsPerPage: number } = {
+      rowsPerPage: 25,
+    };
+    total: number = 0;
+    headers = [
+      {
+        text: 'id',
+        sortable: false,
+        value: 'id'
       },
-      total: 0,
-      editedIndex: -1,
-      headers: [
-        {
-          text: 'id',
-          sortable: false,
-          value: 'id'
-        },
-        {
-          text: '头像',
-          value: 'avatar',
-          sortable: false
-        },
-        {
-          text: 'E-Mail',
-          value: 'email',
-          sortable: false
-        },
-        {
-          text: '手机',
-          value: 'mobile',
-          sortable: false
-        },
-        {
-          text: '学号',
-          value: 'stu_no',
-          sortable: false
-        },
-        {
-          text: '班级姓名',
-          value: 'className',
-          sortable: false
-        },
-        {
-          text: '注册时间',
-          value: 'createTime',
-          sortable: false
-        },
-        {
-          text: '操作',
-          value: 'id',
-          sortable: false
-        }
-      ],
-      editedItem: {},
-      defaultItem: {},
-      items: [],
-      snackbar: {
-        show: false,
-        text: '',
-        timeout: 5000,
-        color: 'error'
+      {
+        text: '头像',
+        value: 'avatar',
+        sortable: false
+      },
+      {
+        text: 'E-Mail',
+        value: 'email',
+        sortable: false
+      },
+      {
+        text: '手机',
+        value: 'mobile',
+        sortable: false
+      },
+      {
+        text: '学号',
+        value: 'stu_no',
+        sortable: false
+      },
+      {
+        text: '班级姓名',
+        value: 'className',
+        sortable: false
+      },
+      {
+        text: '注册时间',
+        value: 'createTime',
+        sortable: false
+      },
+      {
+        text: '操作',
+        value: 'id',
+        sortable: false
       }
-    }),
-    watch: {
-      pagination: {
-        handler () {
-          this.pageLoading = true;
-          this.getDataFromApi()
-            .then(({ data }) => {
-              data = data.data;
-              this.items = data.items || [];
-              this.total = data.page_info.total || 0;
-            })
-            .finally(() => {
-              this.pageLoading = false;
-            });
-        },
-        deep: true
-      }
-    },
-    methods: {
-      getDataFromApi () {
-        const page = this.pagination.page || 1;
-        const pageSize = this.pagination.rowsPerPage || 20;
-        return this.$axios.get('/ajax/admin/user/userprofile/index', {
-          params: {
-            page: page,
-            pageSize: pageSize
-          }
+    ];
+    items: any[] = [];
+    snackbar = {
+      show: false,
+      text: '',
+      timeout: 5000,
+      color: 'error'
+    };
+
+    @Watch('pagination', { deep: true })
+    onPaginationChange () {
+      this.pageLoading = true;
+      this.getDataFromApi()
+        .then(({ data }) => {
+          const res = (data.data) as { items: any[], page_info: any; };
+          this.items = res.items || [];
+          this.total = (res.page_info || {}).total || 0;
+        })
+        .finally(() => {
+          this.pageLoading = false;
         });
-      },
-      openEditModal (item) {
-        this.editedItem = Object.assign({}, item);
-        this.$refs['editor-modal'].$emit('open', this.editedItem);
-      },
-      deleteItem (item) {
-        const index = this.items.indexOf(item);
-        if (confirm('确定要删除这个用户？')) {
-          this.loading = true;
-          this.$axios.$delete('/ajax/admin/user/userprofile/delete', {
-            params: {
-              id: item.id
-            }
-          }).then(() => {
-            this.loadData();
-          }).finally(() => this.loading = false);
+    }
+
+    getDataFromApi () {
+      const page = this.pagination.page || 1;
+      const pageSize = this.pagination.rowsPerPage || 20;
+      return this.$axios.get('/ajax/admin/user/userProfile/index', {
+        params: {
+          page: page,
+          pageSize: pageSize
         }
-      },
-      loadData () {
-        this.pageLoading = true;
-        this.getDataFromApi()
-          .then(({ data }) => {
-            data = data.data;
-            this.items = data.items || [];
-            this.total = data.page_info.total || 0;
-          }).finally(() => this.pageLoading = false);
-      },
-      successSnack (msg) {
-        this.snackbar.show = false;
-        this.snackbar.color = 'success';
-        this.snackbar.show = true;
-        this.snackbar.text = msg || '操作成功';
-      },
-      errorSnack (msg) {
-        this.snackbar.show = false;
-        this.snackbar.color = 'error';
-        this.snackbar.show = true;
-        this.snackbar.text = msg || '操作失败';
+      });
+    }
+
+    openEditModal (uid) {
+      (this.$refs['editor-modal'] as any | { $emit: Function }).$emit('open', uid);
+    }
+
+    deleteItem (id) {
+      if (confirm('确定要删除这个用户？')) {
+        this.loading = true;
+        this.$axios.$delete('/ajax/admin/user/userProfile/delete', {
+          params: {
+            id: id
+          }
+        }).then(() => {
+          this.loadData();
+        }).finally(() => this.loading = false);
       }
     }
-  };
+
+    loadData () {
+      this.pageLoading = true;
+      this.getDataFromApi()
+        .then(({ data }) => {
+          const res = data.data as { items: any[], page_info: any };
+          this.items = res.items || [];
+          this.total = res.page_info.total || 0;
+        }).finally(() => this.pageLoading = false);
+    }
+
+    successSnack (msg) {
+      this.snackbar.show = false;
+      this.snackbar.color = 'success';
+      this.snackbar.show = true;
+      this.snackbar.text = msg || '操作成功';
+    }
+
+    errorSnack (msg) {
+      this.snackbar.show = false;
+      this.snackbar.color = 'error';
+      this.snackbar.show = true;
+      this.snackbar.text = msg || '操作失败';
+    }
+  }
 </script>
 
 <style scoped>

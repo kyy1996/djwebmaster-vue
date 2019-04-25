@@ -2,6 +2,7 @@
   <v-navigation-drawer
     id="app-drawer"
     :value="drawer"
+    @input="setDrawer"
     fixed
     app
     floating
@@ -41,7 +42,6 @@
             v-if="!item._child"
             :to="item.url"
             :active-class="color"
-            avatar
             router
             exact
             nuxt
@@ -84,7 +84,7 @@
                 <v-icon>{{ subItem.icon_class }}</v-icon>
               </v-list-tile-action>
               <v-list-tile-content>
-                <v-list-tile-title v-text="subItem.title" />
+                <v-list-tile-title v-text="subItem.title"/>
               </v-list-tile-content>
             </v-list-tile>
           </v-list-group>
@@ -106,50 +106,6 @@
     components: { VList },
     data: () => ({
       logo: 'https://randomuser.me/api/portraits/men/85.jpg',
-      items: [
-        {
-          to: '/',
-          icon: 'dashboard',
-          title: 'Dashboard'
-        },
-        {
-          to: '/user',
-          icon: 'person',
-          title: 'User',
-          items: [
-            {
-              to: '/user',
-              icon: 'person',
-              title: 'User Profile'
-            },
-            {
-              to: '/table-list',
-              icon: 'clipboard-outline',
-              title: 'Table List'
-            }
-          ]
-        },
-        {
-          to: '/typography',
-          icon: 'format-font',
-          title: 'Typography'
-        },
-        {
-          to: '/icons',
-          icon: 'bubble_chart',
-          title: 'Icons'
-        },
-        {
-          to: '/maps',
-          icon: 'map',
-          title: 'Maps'
-        },
-        {
-          to: '/notifications',
-          icon: 'notifications',
-          title: 'Notifications'
-        }
-      ],
       responsive: false
     }),
     computed: {
@@ -165,7 +121,7 @@
       window.removeEventListener('resize', this.onResponsiveInverted);
     },
     methods: {
-      ...mapMutations(['setDrawer', 'toggleDrawer']),
+      ...mapMutations(['setDrawer']),
       onResponsiveInverted () {
         this.responsive = window.innerWidth < 991;
       }

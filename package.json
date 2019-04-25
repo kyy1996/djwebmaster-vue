@@ -5,10 +5,10 @@
   "description": "djwebmaster",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nuxt-ts",
-    "build": "nuxt-ts build",
-    "start": "nuxt-ts start",
-    "generate": "nuxt-ts generate",
+    "dev": "nuxt",
+    "build": "nuxt build",
+    "start": "nuxt start",
+    "generate": "nuxt generate",
     "lint": "tslint --project ."
   },
   "author": "alen",
@@ -21,7 +21,7 @@
     "lodash": "latest",
     "material-design-icons-iconfont": "^4.0.5",
     "mavon-editor": "^2.7.3",
-    "nuxt-ts": "^2.4.5",
+    "nuxt": "^2.6.2",
     "vue": "^2.6.8",
     "vue-chartist": "^2.2.0",
     "vue-class-component": "^7.0.1",
@@ -32,10 +32,14 @@
     "vuex": "latest"
   },
   "devDependencies": {
+    "@nuxt/typescript": "^2.6.2",
+    "consola": "latest",
     "node-sass": "^4.11.0",
     "sass-loader": "^7.1.0",
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.2",
+    "ts-node": "^8.1.0",
+    "tslint": "^5.16.0",
     "tslint-config-standard": "^8.0.1"
   }
 }

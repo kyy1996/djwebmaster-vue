@@ -14,6 +14,10 @@
     margin-bottom: $card-title-margin !important;
   }
 
+  .title:last-child {
+    margin-bottom: 0 !important;
+  }
+
   .v-divider {
     border-top: $divider-border;
     margin-left: $card-content-x-padding !important;
@@ -29,7 +33,7 @@
       color: rgba($white, .62);
     }
 
-    .v-card--material__header.v-card{
+    .v-card--material__header.v-card {
       padding: $padding-general;
     }
   }
@@ -46,7 +50,7 @@
     margin: $card-margin 0 !important;
   }
 
-  .v-card--material__header{
+  .v-card--material__header {
     border-radius: $border-radius-base + 3;
     min-height: $card-chart-min-height;
     padding: 0 !important;
@@ -163,5 +167,15 @@
 
   .v-table {
     background-color: transparent;
+  }
+}
+
+.v-dialog {
+  box-shadow: none;
+  margin: 0;
+
+  & .v-card {
+    margin-bottom: 0 !important;
+    margin-top: 20px !important;
   }
 }

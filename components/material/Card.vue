@@ -21,16 +21,16 @@
           v-if="!title && !text"
           name="header"
         />
-        <span v-else>
+        <template v-else>
           <h4
+            v-if="title"
             class="title font-weight-light mb-2"
-            v-text="title"
-          />
+            v-text="title"></h4>
           <p
+            v-if="text"
             class="category font-weight-thin"
-            v-text="text"
-          />
-        </span>
+            v-text="text"></p>
+        </template>
       </v-card>
       <slot
         v-else
@@ -54,7 +54,10 @@
 </template>
 
 <script>
+  import HelperOffset from '~/components/helper/Offset.vue';
+
   export default {
+    components: { HelperOffset },
     inheritAttrs: false,
 
     props: {

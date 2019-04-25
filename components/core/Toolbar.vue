@@ -29,28 +29,30 @@
         layout
         py-2
       >
-        <nuxt-link
+        <v-button
           v-ripple
           class="toolbar-items"
           to="/"
+          nuxt
+          icon
         >
           <v-icon color="tertiary">dashboard</v-icon>
-        </nuxt-link>
+        </v-button>
         <v-menu
           bottom
           left
           content-class="dropdown-menu"
           offset-y
           transition="slide-y-transition">
-          <router-link
+          <v-button
+            type="button"
             slot="activator"
             v-ripple
             class="toolbar-items"
-            to
-            @click.prevent="false"
+            icon
           >
             <v-icon color="tertiary">person</v-icon>
-          </router-link>
+          </v-button>
           <v-list>
             <v-list-tile
               to="/user/user/my"
@@ -73,14 +75,16 @@
 
 <script>
   import { createNamespacedHelpers } from 'vuex';
-  import { directives } from 'vuetify/lib';
+  import { directives, VBtn } from 'vuetify/lib';
 
   const { mapMutations } = createNamespacedHelpers('layout');
   const { mapState } = createNamespacedHelpers('menu');
   const VRipple = directives.Ripple;
+  const VButton = VBtn;
 
   export default {
     directives: { VRipple },
+    components: { VButton },
     data: () => ({
       notifications: [
         'Mike, John responded to your email',

@@ -28,7 +28,7 @@ export default function ({ $axios, store, req, redirect }) {
       store.commit('menu/loadMenu', data['menu']);
       if (process.server) {
         // 渲染pageTitle
-        store.dispatch('menu/checkPageTitle', req.url);
+        store.dispatch('menu/checkPageTitle', req.url).finally();
       }
     }
     if (data.hasOwnProperty('user') && data['user']) {

@@ -11,7 +11,7 @@
       <v-flex
         md12
       >
-        <v-btn color="primary" @click.prevent="openEditModal">
+        <v-btn color="primary" @click.prevent="openEditModal()">
           新文章
         </v-btn>
         <material-card
@@ -78,7 +78,7 @@
                 <v-icon
                   small
                   class="mr-2"
-                  @click="openEditModal(item)"
+                  @click="openEditModal(item.id)"
                 >
                   edit
                 </v-icon>
@@ -120,7 +120,7 @@
 </template>
 
 <script>
-  import VArticleEditorModal from '~/components/article/EditorModal';
+  import VArticleEditorModal from '~/components/blog/article/EditorModal';
   import MaterialCard from '~/components/material/Card';
 
   export default {
@@ -216,9 +216,8 @@
           }
         });
       },
-      openEditModal (item) {
-        this.editedItem = Object.assign({}, item);
-        this.$refs['editor-modal'].$emit('open', this.editedItem);
+      openEditModal (id) {
+        this.$refs['editor-modal'].$emit('open', id);
       },
       deleteItem (item) {
         const index = this.items.indexOf(item);

@@ -163,7 +163,7 @@
 </template>
 
 <script>
-  import MaterialCard from '@/components/material/Card';
+  import MaterialCard from '~/components/material/Card.vue';
   import { VTextField } from 'vuetify/lib';
 
   export default {
@@ -195,20 +195,9 @@
       }
     },
     mounted () {
-      this.$on('open', (data) => {
+      this.$on('open', (uid) => {
         this.dialog = true;
-        this.model = {
-          email: data.email,
-          avatar: data.avatar,
-          mobile: data.mobile,
-          uid: data.uid || 0,
-          roles: data.roles || [],
-          stu_no: data.profile ? data.profile.stu_no : '',
-          school: data.profile ? data.profile.school : '',
-          stu_class: data.profile ? data.profile.class : '',
-          name: data.profile ? data.profile.name : '',
-          introduction: data.profile ? data.profile.introduction : ''
-        };
+        uid && this.loadData(uid);
         this.loadRoles();
       });
     },
@@ -216,6 +205,30 @@
       close () {
         this.dialog = false;
         this.model = {};
+      },
+      loadData (uid) {
+        this.loading = true;
+        this.$axios.get('/ajax/admin/user/userProfile/show', { params: { uid } }).then(res => {
+          const data = res.data;
+          if (+data.code === 0) {
+            this.model = {
+              email: data.data.email,
+              avatar: data.data.avatar,
+              mobile: data.data.mobile,
+              uid: data.data.uid || 0,
+              roles: data.data.roles || [],
+              stu_no: data.data.profile ? data.data.profile.stu_no : '',
+              school: data.data.profile ? data.data.profile.school : '',
+              stu_class: data.data.profile ? data.data.profile.class : '',
+              name: data.data.profile ? data.data.profile.name : '',
+              introduction: data.data.profile ? data.data.profile.introduction : ''
+            };
+          } else {
+            this.$emit('error', data.data.msg || '服务器超时');
+          }
+        }).finally(() => this.loading = false).catch(reason => {
+          this.$emit('error', reason.response ? reason.response.data.msg || '服务器超时' : reason.message);
+        });
       },
       loadRoles () {
         this.$axios.get('/ajax/admin/user/role/index').then(response => {
@@ -230,7 +243,7 @@
           this.loading = true;
           const data = this.model;
           data.class = data.stu_class;
-          this.$axios.post('/ajax/admin/user/userprofile/update', data).then(response => {
+          this.$axios.post('/ajax/admin/user/userProfile/update', data).then(response => {
             const data = response.data;
             if (+data.code === 0) {
               this.$emit('update', data.data);
@@ -248,13 +261,4 @@
   };
 </script>
 <style lang="scss">
-  .v-dialog {
-    box-shadow: none;
-    margin: 0;
-
-    & .v-card {
-      margin-bottom: 0 !important;
-      margin-top: 24px !important;
-    }
-  }
 </style>

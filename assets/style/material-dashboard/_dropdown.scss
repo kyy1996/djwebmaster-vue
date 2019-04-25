@@ -10,7 +10,7 @@
     margin: 0 $margin-small - 5;
     padding: $padding-small 1.5rem;
     text-transform: none;
-    @include transition-except-props(.15s linear, color, background-color, box-shadow 0ms);
+    @include transition-except-props(.15s linear);
     white-space: nowrap;
 
     .v-list__tile__title {

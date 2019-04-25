@@ -1,4 +1,5 @@
 @import "variables";
+@import "mixins";
 
 .v-navigation-drawer {
   @include shadow-big();
@@ -8,14 +9,26 @@
     padding: 0;
 
     .v-divider + [role=listitem] {
-      margin-top: 0;
+      margin-top: 0 !important;
     }
 
-    & > [role=listitem], .v-list__group__header, .v-list__group__items > [role=listitem] {
+    .v-list__group__items {
+      overflow: hidden;
+    }
+
+    & > .v-list__group {
+      margin-top: $margin-small;
+
+      & > .v-list__group__header:first-child {
+        margin-top: 0;
+      }
+    }
+
+    & > [role=listitem]:not(:first-child), .v-list__group__header, .v-list__group__items > [role=listitem] {
       margin: $margin-small $margin-general 0;
       transition: background $primary-transition;
 
-      & > .v-list__tile {
+      & > .v-list__tile:not(.v-list__tile--avatar) {
         padding: $padding-small $padding-general;
 
         &:hover,
@@ -55,7 +68,7 @@
     }
 
     .v-list__tile__avatar {
-      margin-left: 0;
+      margin-left: $margin-list-left;
       margin-right: $margin-list-right;
       min-width: unset;
     }
@@ -73,7 +86,6 @@
       border-color: $black-opacity-3;
       margin: $divider-margins auto $divider-margins + 25;
       width: $divider-width;
-
     }
 
     .v-image__image--contain {

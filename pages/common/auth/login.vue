@@ -8,50 +8,46 @@
       >
         <v-img
           src="https://cdn.vuetifyjs.com/images/cards/desert.jpg"
-          aspect-ratio="2"
+          aspect-ratio="3"
         ></v-img>
         <v-form ref="form" v-model="form.valid" lazy-validation @submit.prevent="submit"
                 @reset="this.resetValidation()">
-          <v-container>
-            <v-layout wrap>
-              <v-flex xs12>
-                <v-text-field
-                  v-model="user.username"
-                  :rules="[v => !!v || '请输入登录用户名']"
-                  label="UID/EMAIL/手机号/学号"
-                  color="purple"
-                  required
-                ></v-text-field>
-              </v-flex>
-              <v-flex xs12>
-                <v-text-field
-                  v-model="user.password"
-                  :append-icon="form.password.show ? 'visibility' : 'visibility_off'"
-                  :type="form.password.show ? 'text' : 'password'"
-                  :rules="[v => !!v || '请输入密码', v => (v && v.length>=6) || '密码长度至少6位']"
-                  label="密码"
-                  color="purple"
-                  required
-                  @click:append="form.password.show = !form.password.show"
-                ></v-text-field>
-              </v-flex>
-              <v-flex md6>
-                <v-btn
-                  color="grey"
-                  flat
-                  @click.prevent="reset">
-                  重置
-                </v-btn>
-              </v-flex>
-              <v-flex md6 text-md-right>
-                <v-btn
-                  :loading="loading"
-                  color="success" :disabled="!form.valid" type="submit">
-                  登录
-                </v-btn>
-              </v-flex>
-            </v-layout>
-          </v-container>
+          <v-layout wrap>
+            <v-flex xs12>
+              <v-text-field
+                v-model="user.username"
+                :rules="[v => !!v || '请输入登录用户名']"
+                label="UID/EMAIL/手机号/学号"
+                color="purple"
+                required
+              ></v-text-field>
+            </v-flex>
+            <v-flex xs12>
+              <v-text-field
+                v-model="user.password"
+                :append-icon="form.password.show ? 'visibility' : 'visibility_off'"
+                :type="form.password.show ? 'text' : 'password'"
+                :rules="[v => !!v || '请输入密码', v => (v && v.length>=6) || '密码长度至少6位']"
+                label="密码"
+                color="purple"
+                required
+                @click:append="form.password.show = !form.password.show"
+              ></v-text-field>
+            </v-flex>
+            <v-flex xs12 text-md-right>
+              <v-btn
+                color="grey"
+                flat
+                @click.prevent="reset">
+                重置
+              </v-btn>
+              <v-btn
+                :loading="loading"
+                color="success" :disabled="!form.valid" type="submit">
+                登录
+              </v-btn>
+            </v-flex>
+          </v-layout>
         </v-form>
       </material-card>
     </v-flex>
@@ -75,7 +71,6 @@
   import { Component, Vue } from 'vue-property-decorator';
   import { VCard, VCardActions, VCardText, VSnackbar, VTextField } from 'vuetify/lib';
   import MaterialCard from '~/components/material/Card';
-  import CommonUserAuthService from '~/services/user/auth';
 
   @Component({
     name: 'login',
@@ -115,7 +110,7 @@
         if (this.$refs.form.validate()) {
           this.loading = true;
           this.snackbar.show = false;
-          (new CommonUserAuthService(this.$axios)).login(this.user).then(response => {
+          this.$axios.post('/ajax/common/auth/login', this.user).then(response => {
             const data = response.data;
             this.snackbar.color = data.code !== 0 ? 'error' : 'success';
             this.snackbar.show = true;
