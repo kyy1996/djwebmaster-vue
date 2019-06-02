@@ -1,9 +1,7 @@
 import URL from 'url';
-import AppConfig from '~/config';
 
 export default function ({ $axios, store, req, redirect }) {
   $axios.onRequest(config => {
-    console.log('Making request to ' + config.url);
     config.params = config.params || {};
     if (process.server && req) {
       // 注入页面query参数
@@ -14,10 +12,10 @@ export default function ({ $axios, store, req, redirect }) {
         }
       }
     }
-    if (AppConfig.noCsrf) {
+    if (process.env.noCsrf) {
       config.params['nocsrf'] = 1;
     }
-    if (AppConfig.noLogin) {
+    if (process.env.noLogin) {
       config.params['nologin'] = 1;
     }
   });
@@ -28,7 +26,8 @@ export default function ({ $axios, store, req, redirect }) {
       store.commit('menu/loadMenu', data['menu']);
       if (process.server) {
         // 渲染pageTitle
-        store.dispatch('menu/checkPageTitle', req.url).finally();
+        store.dispatch('menu/checkPageTitle', req.url).then(() => {
+        });
       }
     }
     if (data.hasOwnProperty('user') && data['user']) {

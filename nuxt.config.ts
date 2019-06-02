@@ -15,6 +15,10 @@ const config: NuxtConfiguration = {
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }]
   },
+  env: {
+    noCsrf: '1',
+    noLogin: '1'
+  },
   loading: { color: '#3B8070' },
   server: {
     port: 3000,
@@ -63,7 +67,8 @@ const config: NuxtConfiguration = {
     // baseUrl: 'http://127.0.0.1',
     // port: 8000,
     prefix: '/api/',
-    proxy: true
+    proxy: true,
+    debug: true
   },
   proxy: {
     '/api': {
