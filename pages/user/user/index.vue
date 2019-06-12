@@ -92,6 +92,7 @@
               color="purple"
               circle
               :length="Math.max(Math.ceil(total / (pagination.rowsPerPage || 20)), 1)"
+              total-visible="10"
             ></v-pagination>
           </div>
         </material-card>
@@ -117,24 +118,28 @@
 <script lang="ts">
   import VUserEditorModal from '~/components/user/user/EditorModal.vue';
   import MaterialCard from '~/components/material/Card.vue';
-  import { Vue, Component, Watch } from 'vue-property-decorator';
+  import { Component, Vue, Watch } from 'vue-property-decorator';
+  import Pagination from '@/models/Pagination';
+  import Response from '@/models/Response';
+  import User from '@/models/User';
+  import { VuetifyPagination } from '~/models/vuetify/Pagination';
 
   @Component({
     async asyncData ({ $axios }) {
       const response = await $axios.get('/page/admin/user/userProfile/index');
-      const { data } = response.data as { data: { items: any[], page_info: any } };
+      const { data } = response.data as Response<Pagination<User>>;
       return {
         total: (data.page_info || {}).total || 0,
         items: data.items || []
       };
     },
-    components: { MaterialCard, VUserEditorModal },
+    components: { MaterialCard, VUserEditorModal }
   })
   export default class UserUserIndexPage extends Vue {
     loading: boolean = false;
     pageLoading: boolean = true;
-    pagination: any | { page: number; rowsPerPage: number } = {
-      rowsPerPage: 25,
+    pagination: VuetifyPagination = {
+      rowsPerPage: 25
     };
     total: number = 0;
     headers = [
@@ -179,7 +184,7 @@
         sortable: false
       }
     ];
-    items: any[] = [];
+    items: User[] = [];
     snackbar = {
       show: false,
       text: '',
@@ -192,7 +197,7 @@
       this.pageLoading = true;
       this.getDataFromApi()
         .then(({ data }) => {
-          const res = (data.data) as { items: any[], page_info: any; };
+          const res = (data.data) as Pagination<User>;
           this.items = res.items || [];
           this.total = (res.page_info || {}).total || 0;
         })
@@ -213,7 +218,7 @@
     }
 
     openEditModal (uid) {
-      (this.$refs['editor-modal'] as any | { $emit: Function }).$emit('open', uid);
+      (this.$refs['editor-modal'] as Vue).$emit('open', uid);
     }
 
     deleteItem (id) {
@@ -233,7 +238,7 @@
       this.pageLoading = true;
       this.getDataFromApi()
         .then(({ data }) => {
-          const res = data.data as { items: any[], page_info: any };
+          const res = data.data as Pagination<User>;
           this.items = res.items || [];
           this.total = res.page_info.total || 0;
         }).finally(() => this.pageLoading = false);

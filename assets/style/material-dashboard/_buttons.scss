@@ -17,6 +17,7 @@
   &.v-btn-facebook {
     @include social-buttons-color($social-facebook);
   }
+
   &.v-btn-twitter {
     @include social-buttons-color($social-twitter);
   }
@@ -24,6 +25,7 @@
   .v-icon--left {
     margin-right: $btn-margin-icon;
   }
+
   .v-icon--right {
     margin-left: $btn-margin-icon;
   }
@@ -72,6 +74,7 @@
 
   &.danger {
     @include button-color($brand-danger);
+    color: $white;
   }
 
   .v-icon {

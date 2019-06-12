@@ -119,11 +119,15 @@
   </v-container>
 </template>
 
-<script>
-  import VArticleEditorModal from '~/components/blog/article/EditorModal';
-  import MaterialCard from '~/components/material/Card';
+<script lang="ts">
+  import VArticleEditorModal from '~/components/blog/article/EditorModal.vue';
+  import MaterialCard from '~/components/material/Card.vue';
+  import { Component, Vue, Watch } from "~/node_modules/vue-property-decorator";
+  import { VuetifyPagination } from "~/models/vuetify/Pagination";
+  import Article from "~/models/Article";
+  import TableHeader from "~/models/vuetify/TableHeader";
 
-  export default {
+  @Component({
     async asyncData ({ $axios }) {
       const response = await $axios.get('/page/admin/article/article/index');
       const { data } = response.data;
@@ -133,126 +137,126 @@
       };
     },
     components: { MaterialCard, VArticleEditorModal },
-    data: () => ({
-      dialog: false,
-      pageLoading: true,
-      pagination: {
-        rowsPerPage: 25
+  })
+  export default class BlogArticleIndexPage extends Vue {
+    loading: boolean = false;
+    dialog: boolean = false;
+    pageLoading: boolean = true;
+    pagination: VuetifyPagination = {
+      rowsPerPage: 25
+    };
+    total: number = 0;
+    headers: TableHeader[] = [
+      {
+        text: 'id',
+        sortable: false,
+        value: 'id'
       },
-      total: 0,
-      editedIndex: -1,
-      headers: [
-        {
-          text: 'id',
-          sortable: false,
-          value: 'id'
-        },
-        {
-          text: '封面',
-          value: 'coverImg',
-          sortable: false
-        },
-        {
-          text: '标题',
-          value: 'title',
-          sortable: false
-        },
-        {
-          text: '发表人',
-          value: 'email',
-          sortable: false
-        },
-        {
-          text: '发表时间',
-          value: 'createTime',
-          sortable: false
-        },
-        {
-          text: '修改时间',
-          value: 'updateTime',
-          sortable: false
-        },
-        {
-          text: '操作',
-          value: 'id',
-          sortable: false
-        }
-      ],
-      editedItem: {},
-      defaultItem: {},
-      items: [],
-      snackbar: {
-        show: false,
-        text: '',
-        timeout: 5000,
-        color: 'error'
+      {
+        text: '封面',
+        value: 'coverImg',
+        sortable: false
+      },
+      {
+        text: '标题',
+        value: 'title',
+        sortable: false
+      },
+      {
+        text: '发表人',
+        value: 'email',
+        sortable: false
+      },
+      {
+        text: '发表时间',
+        value: 'createTime',
+        sortable: false
+      },
+      {
+        text: '修改时间',
+        value: 'updateTime',
+        sortable: false
+      },
+      {
+        text: '操作',
+        value: 'id',
+        sortable: false
       }
-    }),
-    watch: {
-      pagination: {
-        handler () {
-          this.pageLoading = true;
-          this.getDataFromApi()
-            .then(({ data }) => {
-              data = data.data;
-              this.items = data.items || [];
-              this.total = data.page_info.total || 0;
-            })
-            .finally(() => {
-              this.pageLoading = false;
-            });
-        },
-        deep: true
-      }
-    },
-    methods: {
-      getDataFromApi () {
-        const page = this.pagination.page || 1;
-        const pageSize = this.pagination.rowsPerPage || 20;
-        return this.$axios.get('/ajax/admin/article/article/index', {
-          params: {
-            page: page,
-            pageSize: pageSize
-          }
+    ];
+    items: Article[] = [];
+    snackbar: any = {
+      show: false,
+      text: '',
+      timeout: 5000,
+      color: 'error'
+    };
+
+    @Watch('pagination', {
+      deep: true
+    })
+    paginationWatcher () {
+      this.pageLoading = true;
+      this.getDataFromApi()
+        .then(({ data }) => {
+          data = data.data;
+          this.items = data.items || [];
+          this.total = data.page_info.total || 0;
+        })
+        .finally(() => {
+          this.pageLoading = false;
         });
-      },
-      openEditModal (id) {
-        this.$refs['editor-modal'].$emit('open', id);
-      },
-      deleteItem (item) {
-        const index = this.items.indexOf(item);
-        if (confirm('确定要删除这篇文章？')) {
-          this.loading = true;
-          this.$axios.$delete('/ajax/admin/article/article/delete', {
-            params: {
-              id: item.id
-            }
-          }).then(() => {
-            this.loadData();
-          }).finally(() => this.loading = false);
+    }
+
+    getDataFromApi () {
+      const page = this.pagination.page || 1;
+      const pageSize = this.pagination.rowsPerPage || 20;
+      return this.$axios.get('/ajax/admin/article/article/index', {
+        params: {
+          page: page,
+          pageSize: pageSize
         }
-      },
-      loadData () {
-        this.pageLoading = true;
-        this.getDataFromApi()
-          .then(({ data }) => {
-            data = data.data;
-            this.items = data.items || [];
-            this.total = data.page_info.total || 0;
-          }).finally(() => this.pageLoading = false);
-      },
-      successSnack (msg) {
-        this.snackbar.show = false;
-        this.snackbar.color = 'success';
-        this.snackbar.show = true;
-        this.snackbar.text = msg || '操作成功';
-      },
-      errorSnack (msg) {
-        this.snackbar.show = false;
-        this.snackbar.color = 'error';
-        this.snackbar.show = true;
-        this.snackbar.text = msg || '操作失败';
+      });
+    }
+
+    openEditModal (id) {
+      (this.$refs['editor-modal'] as any).$emit('open', id);
+    }
+
+    deleteItem (item) {
+      if (confirm('确定要删除这篇文章？')) {
+        this.loading = true;
+        this.$axios.$delete('/ajax/admin/article/article/delete', {
+          params: {
+            id: item.id
+          }
+        }).then(() => {
+          this.loadData();
+        }).finally(() => this.loading = false);
       }
+    }
+
+    loadData () {
+      this.pageLoading = true;
+      this.getDataFromApi()
+        .then(({ data }) => {
+          data = data.data;
+          this.items = data.items || [];
+          this.total = data.page_info.total || 0;
+        }).finally(() => this.pageLoading = false);
+    }
+
+    successSnack (msg) {
+      this.snackbar.show = false;
+      this.snackbar.color = 'success';
+      this.snackbar.show = true;
+      this.snackbar.text = msg || '操作成功';
+    }
+
+    errorSnack (msg) {
+      this.snackbar.show = false;
+      this.snackbar.color = 'error';
+      this.snackbar.show = true;
+      this.snackbar.text = msg || '操作失败';
     }
   };
 </script>

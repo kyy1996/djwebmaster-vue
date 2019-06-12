@@ -67,8 +67,8 @@ const config: NuxtConfiguration = {
     // baseUrl: 'http://127.0.0.1',
     // port: 8000,
     prefix: '/api/',
-    proxy: true,
-    debug: true
+    proxy: true
+    // debug: true
   },
   proxy: {
     '/api': {

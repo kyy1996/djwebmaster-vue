@@ -1,0 +1,10 @@
+.v-pagination {
+  .v-pagination__navigation, .v-pagination__item:not(.v-pagination__item--active) {
+    box-shadow: none;
+    background: none;
+  }
+
+  .v-pagination__item--active.purple {
+    box-shadow: 0px 2px 4px -1px #9c27b033, 0px 4px 5px 0px #9c27b024, 0px 1px 10px 0px #9c27b01F;
+  }
+}

@@ -1,9 +1,24 @@
 {
   "defaultSeverity": "error",
   "extends": [
+    "tslint-config-standard"
   ],
   "rules": {
     "prefer-const": true,
-    "semicolon": true
+    "semicolon": true,
+    "quotemark": {
+      "options": "single"
+    },
+    "prefer-for-of": true,
+    "arrow-return-shorthand": true,
+    "encoding": true,
+    "deprecation": true,
+    "indent": [
+      true,
+      "spaces",
+      2
+    ],
+    "no-invalid-this": true,
+    "space-within-parens": true
   }
 }

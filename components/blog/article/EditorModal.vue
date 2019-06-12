@@ -17,11 +17,16 @@
               label="标题"/>
           </v-flex>
           <v-flex xs12>
-            <v-switch
-              v-model="model.hide"
-              color="purple"
-              label="是否隐藏"
-            ></v-switch>
+            <v-flex
+              xs12
+              md6
+              lg3>
+              <image-uploader
+                v-model="model.cover_img"
+                title="文章封面"
+                :aspect-ratio="16 / 9"
+              ></image-uploader>
+            </v-flex>
           </v-flex>
           <v-flex xs12>
             <v-combobox
@@ -51,6 +56,13 @@
                             @imgAdd="$imgAdd"/>
             </no-ssr>
           </v-flex>
+          <v-flex xs12>
+            <v-switch
+              v-model="model.hide"
+              color="purple"
+              label="是否隐藏"
+            ></v-switch>
+          </v-flex>
           <v-flex
             xs12
             text-xs-right
@@ -70,22 +82,21 @@
 
 <script lang="ts">
   import MaterialCard from '~/components/material/Card.vue';
+  import ImageUploader from '~/components/material/ImageUploader.vue';
   import { VTextField } from 'vuetify/lib';
   import { Component, Vue } from 'vue-property-decorator';
+  import Article from '@/models/Article';
+  import Response from '@/models/Response';
+  import Attachment from "~/models/Attachment";
 
   @Component({
-    components: { VTextField, MaterialCard }
+    name: 'BlogArticleEditorModal',
+    components: { VTextField, MaterialCard, ImageUploader }
   })
   export default class BlogArticleEditorModal extends Vue {
-    loading: boolean = false;
+    pageLoading: boolean = false;
     dialog: boolean = false;
-    model: {
-      id: number,
-      title: string,
-      content: string,
-      tags: string[],
-      hide: boolean;
-    } = {
+    model: Article = {
       id: 0,
       title: '',
       content: '',
@@ -140,20 +151,16 @@
     }
 
     loadData (id) {
-      this.loading = true;
+      this.pageLoading = true;
       (id && this.$axios.get('/ajax/admin/article/article/show?id=' + id).then(response => {
-        const data: {
-          data: any,
-          msg: string,
-          code: number
-        } = response.data;
+        const data: Response<Article> = response.data;
         if (+data.code === 0) {
           this.model = data.data;
         } else {
           this.close();
           this.$emit('error', data.msg || '服务器超时');
         }
-      }).finally(() => this.loading = false).catch(reason => {
+      }).finally(() => this.pageLoading = false).catch(reason => {
         this.close();
         this.$emit('error', reason.response ? reason.response.data.msg || '服务器超时' : reason.message);
       })) || (this.model = {
@@ -161,7 +168,16 @@
         title: '',
         content: '',
         tags: [],
-        hide: false
+        hide: false,
+        read_count: 0,
+        comment_count: 0,
+        extra: {},
+        cover_img: '',
+        uid: 0,
+        created_at: '',
+        updated_at: '',
+        deleted_at: '',
+        ip: ''
       });
     }
 
@@ -171,13 +187,9 @@
 
     save () {
       if ((this.$refs['form'] as any).validate()) {
-        this.loading = true;
+        this.pageLoading = true;
         this.$axios.post('/ajax/admin/article/article/update', this.model).then(response => {
-          const data: {
-            data: any,
-            msg: string,
-            code: number
-          } = response.data;
+          const data: Response<Article> = response.data;
           if (+data.code === 0) {
             this.$emit('update', data.data);
             this.$emit('success');
@@ -185,7 +197,7 @@
           } else {
             this.$emit('error', data.msg || '服务器超时');
           }
-        }).finally(() => this.loading = false).catch(reason => {
+        }).finally(() => this.pageLoading = false).catch(reason => {
           this.$emit('error', reason.response ? reason.response.data.msg || '服务器超时' : reason.message);
         });
       }
@@ -193,24 +205,31 @@
 
     $imgAdd (pos, $file) {
       // 第一步.将图片上传到服务器.
-      // const formdata = new FormData()
-      // formdata.append('image', $file)
-      // this.$axios({
-      //   url: 'server url',
-      //   method: 'post',
-      //   data: formdata,
-      //   headers: { 'Content-Type': 'multipart/form-data' }
-      // }).then((url) => {
-      //   // 第二步.将返回的url替换到文本原位置![...](0) -> ![...](url)
-      //   /**
-      //    * $vm 指为mavonEditor实例，可以通过如下两种方式获取
-      //    * 1. 通过引入对象获取: `import {mavonEditor} from ...` 等方式引入后，`$vm`为`mavonEditor`
-      //    * 2. 通过$refs获取: html声明ref : `<mavon-editor ref=md ></mavon-editor>，`$vm`为 `this.$refs.md`
-      //    */
-      // })
-      (this.$refs.md as {
-        $img2Url: Function
-      } | any).$img2Url(pos, 'http://www.baidu.com');
+      this.pageLoading = true;
+      const formData = new FormData();
+      formData.append('file', $file);
+      formData.append('directory', '/blog/images');
+      this.$axios({
+        url: '/ajax/admin/attachment/attachment/upload',
+        method: 'post',
+        data: formData,
+        headers: { 'Content-Type': 'multipart/form-data' }
+      }).then(res => {
+        const data = res.data as Response<Attachment>;
+        if (+data.code === 0 && data.data && data.data.url) {
+          // 第二步.将返回的url替换到文本原位置![...](0) -> ![...](url)
+          /**
+           * $vm 指为mavonEditor实例，可以通过如下两种方式获取
+           * 1. 通过引入对象获取: `import {mavonEditor} from ...` 等方式引入后，`$vm`为`mavonEditor`
+           * 2. 通过$refs获取: html声明ref : `<mavon-editor ref=md ></mavon-editor>，`$vm`为 `this.$refs.md`
+           */
+          (this.$refs.md as {
+            $img2Url: Function
+          } | any).$img2Url(pos, data.data.url);
+        }
+      }).finally(() => {
+        this.pageLoading = false;
+      })
     }
 
     removeTag (item) {
