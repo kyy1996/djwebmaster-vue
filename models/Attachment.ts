@@ -1,4 +1,6 @@
-export default interface Attachment {
+import Timestamp from '~/models/Timestamp';
+
+export default interface Attachment extends Partial<Readonly<Timestamp>> {
   id?: number;
   readonly uid?: number;
   readonly filename?: string;
@@ -12,7 +14,4 @@ export default interface Attachment {
   extra?: null | object;
   valid?: boolean;
   readonly count?: number;
-  readonly created_at?: string;
-  readonly updated_at?: null | string;
-  readonly deleted_at?: null | string;
 }

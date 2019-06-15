@@ -122,7 +122,8 @@
   import Pagination from '@/models/Pagination';
   import Response from '@/models/Response';
   import User from '@/models/User';
-  import { VuetifyPagination } from '~/models/vuetify/Pagination';
+  import VuetifyPagination from '~/models/vuetify/VuetifyPagination';
+  import VuetifyTableHeader from "~/models/vuetify/VuetifyTableHeader";
 
   @Component({
     async asyncData ({ $axios }) {
@@ -142,7 +143,7 @@
       rowsPerPage: 25
     };
     total: number = 0;
-    headers = [
+    headers: VuetifyTableHeader[] = [
       {
         text: 'id',
         sortable: false,

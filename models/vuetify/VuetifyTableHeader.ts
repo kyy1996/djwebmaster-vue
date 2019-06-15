@@ -1,4 +1,4 @@
-export default interface TableHeader {
+export default interface VuetifyTableHeader {
   text?: string;
   value?: string;
   align?: 'left' | 'center' | 'right';

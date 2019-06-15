@@ -1,4 +1,4 @@
-export interface VuetifyPagination {
+export default interface VuetifyPagination {
   descending?: boolean;
   page?: number;
   rowsPerPage?: number;

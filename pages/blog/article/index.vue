@@ -123,9 +123,9 @@
   import VArticleEditorModal from '~/components/blog/article/EditorModal.vue';
   import MaterialCard from '~/components/material/Card.vue';
   import { Component, Vue, Watch } from "~/node_modules/vue-property-decorator";
-  import { VuetifyPagination } from "~/models/vuetify/Pagination";
+  import VuetifyPagination from "~/models/vuetify/VuetifyPagination";
   import Article from "~/models/Article";
-  import TableHeader from "~/models/vuetify/TableHeader";
+  import VuetifyTableHeader from "~/models/vuetify/VuetifyTableHeader";
 
   @Component({
     async asyncData ({ $axios }) {
@@ -146,7 +146,7 @@
       rowsPerPage: 25
     };
     total: number = 0;
-    headers: TableHeader[] = [
+    headers: VuetifyTableHeader[] = [
       {
         text: 'id',
         sortable: false,

@@ -83,15 +83,25 @@
 <script lang="ts">
   import VUserLogEditorModal from '~/components/user/log/EditorModal.vue';
   import MaterialCard from '~/components/material/Card.vue';
-  import { Component, Vue, Watch } from 'vue-property-decorator';
+  import { Watch } from 'vue-property-decorator';
+  import Vue from 'vue';
+  import VuetifyPagination from "~/models/vuetify/VuetifyPagination";
+  import UserLog from "~/models/UserLog";
+  import Pagination from "~/models/Pagination";
+  import VuetifyTableHeader from "~/models/vuetify/VuetifyTableHeader";
+  import Component from "~/node_modules/vue-class-component";
 
   @Component({
     components: { MaterialCard, VUserLogEditorModal },
     async asyncData ({ $axios }) {
       const response = await $axios.get('/page/admin/user/userLog/index');
-      const { data } = response.data;
+      const data = response.data.data as Pagination<UserLog>;
       return {
         total: data.page_info.total || 0,
+        pagination: {
+          rowsPerPage: data.page_info.page_size,
+          page: data.page_info.page_index
+        },
         items: data.items || []
       };
     }
@@ -99,11 +109,11 @@
   export default class UserLogIndexPage extends Vue {
     dialog: boolean = false;
     pageLoading: boolean = true;
-    pagination: any = {
+    pagination: VuetifyPagination = {
       rowsPerPage: 25
     };
     total: number = 0;
-    headers: any[] = [
+    headers: VuetifyTableHeader[] = [
       {
         text: 'id',
         sortable: false,
@@ -135,22 +145,11 @@
         sortable: false
       }
     ];
-    editedItem = {};
-    defaultItem = {};
-    items = [];
+    items: UserLog[] = [];
 
     @Watch('pagination', { deep: true })
     onChangePagination () {
-      this.pageLoading = true;
-      this.getDataFromApi()
-        .then(({ data }) => {
-          data = data.data as any;
-          this.items = data.items || [];
-          this.total = data.page_info.total || 0;
-        })
-        .finally(() => {
-          this.pageLoading = false;
-        });
+      this.loadData();
     }
 
     getDataFromApi () {
@@ -165,17 +164,22 @@
     }
 
     openEditModal (id) {
-      (this.$refs['editor-modal'] as Vue | any).$emit('open', id);
+      (this.$refs['editor-modal'] as Vue).$emit('open', id);
     }
 
     loadData () {
       this.pageLoading = true;
       this.getDataFromApi()
         .then(({ data }) => {
-          data = data.data;
-          this.items = data.items || [];
-          this.total = data.page_info.total || 0;
-        }).finally(() => this.pageLoading = false);
+          const list = data.data as Pagination<UserLog>;
+          this.items = list.items || [];
+          this.total = list.page_info.total || 0;
+          this.pagination.rowsPerPage = list.page_info.page_size;
+          this.pagination.page = list.page_info.page_index;
+        })
+        .finally(() => {
+          this.pageLoading = false;
+        });
     }
   }
 </script>

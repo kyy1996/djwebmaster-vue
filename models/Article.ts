@@ -1,4 +1,6 @@
-export default interface Article {
+import Timestamp from '~/models/Timestamp';
+
+export default interface Article extends Partial<Readonly<Timestamp>> {
   readonly id: number;
   title: string;
   content: string;
@@ -10,7 +12,4 @@ export default interface Article {
   readonly read_count?: number;
   readonly comment_count?: number;
   readonly ip?: string;
-  readonly deleted_at?: string;
-  readonly created_at?: string;
-  readonly updated_at?: string;
 }

@@ -1,4 +1,6 @@
-export default interface User {
+import Timestamp from '~/models/Timestamp';
+
+export default interface User extends Partial<Readonly<Timestamp>> {
   readonly uid: number;
   avatar?: string;
   mobile: string;
@@ -13,7 +15,4 @@ export default interface User {
   readonly update_ip?: string;
   readonly last_login_at?: string;
   readonly last_login_ip?: string;
-  readonly created_at?: string;
-  readonly updated_at?: string;
-  readonly deleted_at?: string;
 }
