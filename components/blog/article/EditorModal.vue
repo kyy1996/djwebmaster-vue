@@ -14,13 +14,16 @@
               v-model="model.title"
               color="purple"
               :rules="[v => v && v.length > 0 || '请输入标题']"
-              label="标题"/>
+              label="标题"
+            />
           </v-flex>
           <v-flex xs12>
             <v-flex
               xs12
               md6
-              lg3>
+              lg3
+            >
+              <v-label :value="true">文章封面</v-label>
               <image-uploader
                 v-model="model.cover_img"
                 title="文章封面"
@@ -52,8 +55,10 @@
             xs12
           >
             <no-ssr>
-              <mavon-editor ref="md" v-model="model.content" :toolbars="toolbars" :box-shadow="false"
-                            @imgAdd="$imgAdd"/>
+              <mavon-editor
+                ref="md" v-model="model.content" :toolbars="toolbars" :box-shadow="false"
+                @imgAdd="$imgAdd"
+              />
             </no-ssr>
           </v-flex>
           <v-flex xs12>
@@ -87,7 +92,7 @@
   import { Component, Vue } from 'vue-property-decorator';
   import Article from '@/models/Article';
   import Response from '@/models/Response';
-  import Attachment from "~/models/Attachment";
+  import Attachment from '~/models/Attachment';
 
   @Component({
     name: 'BlogArticleEditorModal',
@@ -229,7 +234,7 @@
         }
       }).finally(() => {
         this.pageLoading = false;
-      })
+      });
     }
 
     removeTag (item) {
