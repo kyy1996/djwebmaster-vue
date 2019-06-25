@@ -43,6 +43,7 @@ const config: NuxtConfiguration = {
     '@/plugins/axios',
     '@/plugins/components',
     '@/plugins/theme',
+    '@/plugins/snackbar',
     { src: '@/plugins/mavonEditor', ssr: false }
   ],
   transition: {
