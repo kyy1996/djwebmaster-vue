@@ -11,6 +11,7 @@
     "generate": "nuxt generate",
     "lint": "tslint --project ."
   },
+  "typings": "types/index.d.ts",
   "author": "alen",
   "license": "MIT",
   "dependencies": {

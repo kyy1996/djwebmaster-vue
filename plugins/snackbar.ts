@@ -1,7 +1,7 @@
 import { VBtn, VSnackbar } from 'vuetify/lib';
 import { Component, Emit, Vue } from 'vue-property-decorator';
 import { CreateElement, VNode } from 'vue';
-import { SnackbarInstanceProp } from '~/types/snackbar';
+import { SnackbarInstanceProp } from '~/types';
 
 @Component({
   render (createElement: CreateElement): VNode {
