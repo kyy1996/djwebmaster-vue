@@ -29,7 +29,8 @@
                   v-model="model.title"
                   readonly
                   color="purple"
-                  label="标题"/>
+                  label="标题"
+                />
               </v-flex>
               <v-flex
                 xs12
@@ -38,7 +39,8 @@
                   v-model="model.description"
                   readonly
                   color="purple"
-                  label="描述"/>
+                  label="描述"
+                />
               </v-flex>
               <v-flex
                 xs12
@@ -105,11 +107,11 @@
           this.model = data.data;
         } else {
           this.close();
-          this.$emit('error', data.msg || '服务器超时');
+          this.$snackbar.error(data.msg || '服务器超时');
         }
       }).finally(() => this.loading = false).catch(reason => {
         this.close();
-        this.$emit('error', reason.response ? (reason.response.data as { msg: string }).msg || '服务器超时' : reason.message);
+        this.$snackbar.error(reason.response ? (reason.response.data as { msg: string }).msg || '服务器超时' : reason.message);
       })) || (this.model = {
         id: 0,
         uid: 0,

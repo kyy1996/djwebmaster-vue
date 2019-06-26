@@ -96,7 +96,13 @@
 
   @Component({
     name: 'BlogArticleEditorModal',
-    components: { VTextField, MaterialCard, ImageUploader }
+    components: { VTextField, MaterialCard, ImageUploader },
+    mounted () {
+      this.$on('open', (id) => {
+        this['loadData'](id);
+        this['dialog'] = true;
+      });
+    }
   })
   export default class BlogArticleEditorModal extends Vue {
     pageLoading: boolean = false;
@@ -148,13 +154,6 @@
       return (this.model.id > 0 ? '编辑' : '新增') + '文章';
     }
 
-    mounted () {
-      this.$on('open', (id) => {
-        this.loadData(id);
-        this.dialog = true;
-      });
-    }
-
     loadData (id) {
       this.pageLoading = true;
       (id && this.$axios.get('/ajax/admin/article/article/show?id=' + id).then(response => {
@@ -163,11 +162,11 @@
           this.model = data.data;
         } else {
           this.close();
-          this.$emit('error', data.msg || '服务器超时');
+          this.$snackbar.error(data.msg || '服务器超时');
         }
       }).finally(() => this.pageLoading = false).catch(reason => {
         this.close();
-        this.$emit('error', reason.response ? reason.response.data.msg || '服务器超时' : reason.message);
+        this.$snackbar.error(reason.response ? reason.response.data.msg || '服务器超时' : reason.message);
       })) || (this.model = {
         id: 0,
         title: '',
@@ -197,13 +196,13 @@
           const data: Response<Article> = response.data;
           if (+data.code === 0) {
             this.$emit('update', data.data);
-            this.$emit('success');
+            this.$snackbar.success();
             this.close();
           } else {
-            this.$emit('error', data.msg || '服务器超时');
+            this.$snackbar.error(data.msg || '服务器超时');
           }
         }).finally(() => this.pageLoading = false).catch(reason => {
-          this.$emit('error', reason.response ? reason.response.data.msg || '服务器超时' : reason.message);
+          this.$snackbar.error(reason.response ? reason.response.data.msg || '服务器超时' : reason.message);
         });
       }
     }
@@ -244,6 +243,5 @@
   }
 </script>
 
-<style scoped>
-
+<style scoped lang="scss">
 </style>

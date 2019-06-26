@@ -118,14 +118,14 @@ const showNextMessage = () => {
   }
 };
 
-VSnackbar.info = function (message: string, title: string, props: Partial<SnackbarInstanceProp> = {}) {
+VSnackbar.info = function (message: string, title: string = '', props: Partial<SnackbarInstanceProp> = {}) {
   props.color = 'info';
   props.text = message;
   props.title = title;
   return confirm(props);
 };
 
-VSnackbar.success = function (message: string, title: string, props: Partial<SnackbarInstanceProp> = {}) {
+VSnackbar.success = function (message: string = '操作成功', title: string = '', props: Partial<SnackbarInstanceProp> = {}) {
   props.color = 'success';
   props.text = message;
   props.title = title;
@@ -139,14 +139,14 @@ VSnackbar.warning = function (message: string, title: string, props: Partial<Sna
   return confirm(props);
 };
 
-VSnackbar.error = function (message: string, title: string, props: Partial<SnackbarInstanceProp> = {}) {
+VSnackbar.error = function (message: string = '操作失败', title: string = '', props: Partial<SnackbarInstanceProp> = {}) {
   props.color = 'error';
   props.text = message;
   props.title = title;
   return confirm(props);
 };
 
-VSnackbar.confirm = function (message: string, title: string, props: Partial<SnackbarInstanceProp> = {}) {
+VSnackbar.confirm = function (message: string, title: string = '', props: Partial<SnackbarInstanceProp> = {}) {
   props.color = 'confirm';
   props.text = message;
   props.title = title;

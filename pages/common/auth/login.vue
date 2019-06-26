@@ -10,8 +10,10 @@
           src="https://cdn.vuetifyjs.com/images/cards/desert.jpg"
           aspect-ratio="3"
         ></v-img>
-        <v-form ref="form" v-model="form.valid" lazy-validation @submit.prevent="submit"
-                @reset="this.resetValidation()">
+        <v-form
+          ref="form" v-model="form.valid" lazy-validation @submit.prevent="submit"
+          @reset="this.resetValidation()"
+        >
           <v-layout wrap>
             <v-flex xs12>
               <v-text-field
@@ -38,12 +40,14 @@
               <v-btn
                 color="grey"
                 flat
-                @click.prevent="reset">
+                @click.prevent="reset"
+              >
                 重置
               </v-btn>
               <v-btn
                 :loading="loading"
-                color="success" :disabled="!form.valid" type="submit">
+                color="success" :disabled="!form.valid" type="submit"
+              >
                 登录
               </v-btn>
             </v-flex>
@@ -51,31 +55,18 @@
         </v-form>
       </material-card>
     </v-flex>
-    <v-snackbar
-      v-model="snackbar.show"
-      :color="snackbar.color"
-      :timeout="snackbar.timeout"
-    >
-      {{ snackbar.text }}
-      <v-btn
-        flat
-        @click="snackbar.show = false"
-      >
-        关闭
-      </v-btn>
-    </v-snackbar>
   </v-layout>
 </template>
 
 <script>
   import { Component, Vue } from 'vue-property-decorator';
-  import { VCard, VCardActions, VCardText, VSnackbar, VTextField } from 'vuetify/lib';
+  import { VCard, VCardActions, VCardText, VTextField } from 'vuetify/lib';
   import MaterialCard from '~/components/material/Card';
 
   @Component({
     name: 'login',
     layout: 'empty',
-    components: { VTextField, VCard, VCardText, VCardActions, VSnackbar, MaterialCard },
+    components: { VTextField, VCard, VCardText, VCardActions, MaterialCard },
     mounted () {
       if (window && window.localStorage) {
         const userJson = window.localStorage.getItem('user') || '';
@@ -96,12 +87,6 @@
           },
           valid: false
         },
-        snackbar: {
-          show: false,
-          text: '',
-          timeout: 5000,
-          color: 'error'
-        },
         loading: false
       };
     },
@@ -109,20 +94,15 @@
       submit () {
         if (this.$refs.form.validate()) {
           this.loading = true;
-          this.snackbar.show = false;
           this.$axios.post('/ajax/common/auth/login', this.user).then(response => {
             const data = response.data;
-            this.snackbar.color = data.code !== 0 ? 'error' : 'success';
-            this.snackbar.show = true;
-            this.snackbar.text = data.msg;
+            this.$snackbar[data.code !== 0 ? 'error' : 'success'](data.msg);
             if (data.code === 0) {
               this.$store.commit('user/loginUser', data.data);
               this.$router.push('/');
             }
           }).finally(() => this.loading = false).catch(reason => {
-            this.snackbar.color = 'error';
-            this.snackbar.show = true;
-            this.snackbar.text = reason.response ? reason.response.data.msg || '服务器超时' : reason.message;
+            this.$snackbar.error(reason.response ? reason.response.data.msg || '服务器超时' : reason.message);
           });
         }
         return false;

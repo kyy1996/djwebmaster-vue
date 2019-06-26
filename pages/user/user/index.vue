@@ -96,22 +96,9 @@
             ></v-pagination>
           </div>
         </material-card>
-        <v-user-editor-modal ref="editor-modal" @success="successSnack" @update="loadData" @error="errorSnack"/>
+        <v-user-editor-modal ref="editor-modal" @update="loadData"/>
       </v-flex>
     </v-layout>
-    <v-snackbar
-      v-model="snackbar.show"
-      :color="snackbar.color"
-      :timeout="snackbar.timeout"
-    >
-      {{ snackbar.text }}
-      <v-btn
-        flat
-        @click="snackbar.show = false"
-      >
-        关闭
-      </v-btn>
-    </v-snackbar>
   </v-container>
 </template>
 
@@ -123,7 +110,7 @@
   import Response from '@/models/Response';
   import User from '@/models/User';
   import VuetifyPagination from '~/models/vuetify/VuetifyPagination';
-  import VuetifyTableHeader from "~/models/vuetify/VuetifyTableHeader";
+  import VuetifyTableHeader from '~/models/vuetify/VuetifyTableHeader';
 
   @Component({
     async asyncData ({ $axios }) {
@@ -186,12 +173,6 @@
       }
     ];
     items: User[] = [];
-    snackbar = {
-      show: false,
-      text: '',
-      timeout: 5000,
-      color: 'error'
-    };
 
     @Watch('pagination', { deep: true })
     onPaginationChange () {
@@ -243,20 +224,6 @@
           this.items = res.items || [];
           this.total = res.page_info.total || 0;
         }).finally(() => this.pageLoading = false);
-    }
-
-    successSnack (msg) {
-      this.snackbar.show = false;
-      this.snackbar.color = 'success';
-      this.snackbar.show = true;
-      this.snackbar.text = msg || '操作成功';
-    }
-
-    errorSnack (msg) {
-      this.snackbar.show = false;
-      this.snackbar.color = 'error';
-      this.snackbar.show = true;
-      this.snackbar.text = msg || '操作失败';
     }
   }
 </script>

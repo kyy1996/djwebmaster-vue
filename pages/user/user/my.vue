@@ -2,7 +2,8 @@
   <v-container
     fill-height
     fluid
-    grid-list-xl>
+    grid-list-xl
+  >
     <v-layout
       justify-center
       wrap
@@ -154,29 +155,16 @@
         </material-card>
       </v-flex>
     </v-layout>
-    <v-snackbar
-      v-model="snackbar.show"
-      :color="snackbar.color"
-      :timeout="snackbar.timeout"
-    >
-      {{ snackbar.text }}
-      <v-btn
-        flat
-        @click="snackbar.show = false"
-      >
-        关闭
-      </v-btn>
-    </v-snackbar>
   </v-container>
 </template>
 
 <script>
-  import MaterialCard from '@/components/material/Card';
+  import MaterialCard from '~/components/material/Card.vue';
   import { VTextField } from 'vuetify/lib';
 
   export default {
     components: { MaterialCard, VTextField },
-    async asyncData ({ store, $axios }) {
+    async asyncData ({ $axios }) {
       const response = await $axios.get('/page/admin/common/welcome/index');
       const data = response.data.user;
       return {
@@ -207,12 +195,6 @@
           introduction: '',
           password: ''
         },
-        snackbar: {
-          show: false,
-          text: '',
-          timeout: 5000,
-          color: 'error'
-        },
         show_password: false,
         loading: false
       };
@@ -221,18 +203,13 @@
       save () {
         if (this.$refs['form'].validate()) {
           this.loading = true;
-          this.snackbar.show = false;
           const data = this.user;
           data.class = data.stu_class;
           this.$axios.post('/ajax/admin/user/userprofile/update', this.user).then(response => {
             const data = response.data;
-            this.snackbar.color = data.code !== 0 ? 'error' : 'success';
-            this.snackbar.show = true;
-            this.snackbar.text = data.msg;
+            this.$snackbar[data.code !== 0 ? 'error' : 'success'](data.msg);
           }).finally(() => this.loading = false).catch(reason => {
-            this.snackbar.color = 'error';
-            this.snackbar.show = true;
-            this.snackbar.text = reason.response ? reason.response.data.msg || '服务器超时' : reason.message;
+            this.$snackbar.error(reason.response ? reason.response.data.msg || '服务器超时' : reason.message);
           });
         }
       }

@@ -100,32 +100,19 @@
             ></v-pagination>
           </div>
         </material-card>
-        <v-article-editor-modal ref="editor-modal" @success="successSnack" @update="loadData" @error="errorSnack"/>
+        <v-article-editor-modal ref="editor-modal" @update="loadData"/>
       </v-flex>
     </v-layout>
-    <v-snackbar
-      v-model="snackbar.show"
-      :color="snackbar.color"
-      :timeout="snackbar.timeout"
-    >
-      {{ snackbar.text }}
-      <v-btn
-        flat
-        @click="snackbar.show = false"
-      >
-        关闭
-      </v-btn>
-    </v-snackbar>
   </v-container>
 </template>
 
 <script lang="ts">
   import VArticleEditorModal from '~/components/blog/article/EditorModal.vue';
   import MaterialCard from '~/components/material/Card.vue';
-  import { Component, Vue, Watch } from "~/node_modules/vue-property-decorator";
-  import VuetifyPagination from "~/models/vuetify/VuetifyPagination";
-  import Article from "~/models/Article";
-  import VuetifyTableHeader from "~/models/vuetify/VuetifyTableHeader";
+  import { Component, Vue, Watch } from '~/node_modules/vue-property-decorator';
+  import VuetifyPagination from '~/models/vuetify/VuetifyPagination';
+  import Article from '~/models/Article';
+  import VuetifyTableHeader from '~/models/vuetify/VuetifyTableHeader';
 
   @Component({
     async asyncData ({ $axios }) {
@@ -136,7 +123,7 @@
         items: data.items || []
       };
     },
-    components: { MaterialCard, VArticleEditorModal },
+    components: { MaterialCard, VArticleEditorModal }
   })
   export default class BlogArticleIndexPage extends Vue {
     loading: boolean = false;
@@ -184,12 +171,6 @@
       }
     ];
     items: Article[] = [];
-    snackbar: any = {
-      show: false,
-      text: '',
-      timeout: 5000,
-      color: 'error'
-    };
 
     @Watch('pagination', {
       deep: true
@@ -243,20 +224,6 @@
           this.items = data.items || [];
           this.total = data.page_info.total || 0;
         }).finally(() => this.pageLoading = false);
-    }
-
-    successSnack (msg) {
-      this.snackbar.show = false;
-      this.snackbar.color = 'success';
-      this.snackbar.show = true;
-      this.snackbar.text = msg || '操作成功';
-    }
-
-    errorSnack (msg) {
-      this.snackbar.show = false;
-      this.snackbar.color = 'error';
-      this.snackbar.show = true;
-      this.snackbar.text = msg || '操作失败';
     }
   };
 </script>

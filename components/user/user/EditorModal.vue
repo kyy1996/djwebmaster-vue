@@ -23,6 +23,16 @@
                     class="mx-auto d-block"
                     size="130"
                   >
+                    <v-btn
+                      color="error"
+                      dark
+                      small
+                      absolute
+                      fab
+                      round
+                    >
+                      <v-icon>delete_forever</v-icon>
+                    </v-btn>
                     <v-img
                       src="https://demos.creative-tim.com/vue-material-dashboard/img/marc.aba54d65.jpg"
                     ></v-img>
@@ -224,10 +234,10 @@
               introduction: data.data.profile ? data.data.profile.introduction : ''
             };
           } else {
-            this.$emit('error', data.data.msg || '服务器超时');
+            this.$snackbar.error(data.data.msg || '服务器超时');
           }
         }).finally(() => this.loading = false).catch(reason => {
-          this.$emit('error', reason.response ? reason.response.data.msg || '服务器超时' : reason.message);
+          this.$snackbar.error(reason.response ? reason.response.data.msg || '服务器超时' : reason.message);
         });
       },
       loadRoles () {
@@ -247,13 +257,13 @@
             const data = response.data;
             if (+data.code === 0) {
               this.$emit('update', data.data);
-              this.$emit('success');
+              this.$snackbar.success();
               this.close();
             } else {
-              this.$emit('error', data.msg || '服务器超时');
+              this.$snackbar.error(data.msg || '服务器超时');
             }
           }).finally(() => this.loading = false).catch(reason => {
-            this.$emit('error', reason.response ? reason.response.data.msg || '服务器超时' : reason.message);
+            this.$snackbar.error(reason.response ? reason.response.data.msg || '服务器超时' : reason.message);
           });
         }
       }
