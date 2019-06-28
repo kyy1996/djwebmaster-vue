@@ -1,6 +1,6 @@
-body, h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4 {
-  font-family: $font-family-sans-serif !important;
-  font-weight: $font-weight-lighter !important;
+body, h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .application {
+  font-family: "Microsoft JHengHei", "PingFang SC", $font-family-sans-serif !important;
+  font-weight: $font-weight-base !important;
   line-height: $line-height-base !important;
 }
 

@@ -98,9 +98,11 @@
     name: 'BlogArticleEditorModal',
     components: { VTextField, MaterialCard, ImageUploader },
     mounted () {
-      this.$on('open', (id) => {
-        this['loadData'](id);
-        this['dialog'] = true;
+      this.$on('open', id => {
+        this.$nextTick(() => {
+          this['loadData'](id);
+          this['dialog'] = true;
+        })
       });
     }
   })
@@ -187,6 +189,24 @@
 
     close () {
       this.dialog = false;
+      this.$nextTick(() => {
+        this.model = {
+          id: 0,
+          title: '',
+          content: '',
+          tags: [],
+          hide: false,
+          read_count: 0,
+          comment_count: 0,
+          extra: {},
+          cover_img: '',
+          uid: 0,
+          created_at: '',
+          updated_at: '',
+          deleted_at: '',
+          ip: ''
+        };
+      })
     }
 
     save () {

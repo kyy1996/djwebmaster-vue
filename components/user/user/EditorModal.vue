@@ -18,25 +18,9 @@
                 <v-flex
                   xs12
                 >
-                  <v-avatar
-                    slot="offset"
-                    class="mx-auto d-block"
-                    size="130"
-                  >
-                    <v-btn
-                      color="error"
-                      dark
-                      small
-                      absolute
-                      fab
-                      round
-                    >
-                      <v-icon>delete_forever</v-icon>
-                    </v-btn>
-                    <v-img
-                      src="https://demos.creative-tim.com/vue-material-dashboard/img/marc.aba54d65.jpg"
-                    ></v-img>
-                  </v-avatar>
+                  <material-avatar-uploader
+                    v-model="model.avatar"
+                  ></material-avatar-uploader>
                 </v-flex>
                 <v-flex
                   xs12
@@ -175,9 +159,11 @@
 <script>
   import MaterialCard from '~/components/material/Card.vue';
   import { VTextField } from 'vuetify/lib';
+  import MaterialMaskBtn from "~/components/material/MaskBtn.vue";
+  import MaterialAvatarUploader from "~/components/material/AvatarUploader.vue";
 
   export default {
-    components: { MaterialCard, VTextField },
+    components: { MaterialAvatarUploader, MaterialMaskBtn, MaterialCard, VTextField },
     data () {
       return {
         dialog: false,
@@ -205,10 +191,12 @@
       }
     },
     mounted () {
-      this.$on('open', (uid) => {
-        this.dialog = true;
+      this.$on('open', uid => {
         uid && this.loadData(uid);
         this.loadRoles();
+        this.$nextTick(() => {
+          this.dialog = true;
+        })
       });
     },
     methods: {

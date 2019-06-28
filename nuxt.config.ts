@@ -35,7 +35,8 @@ const config: NuxtConfiguration = {
   */
   css: [
     '@/assets/style/app.styl',
-    'material-design-icons-iconfont/dist/material-design-icons.css'
+    'material-design-icons-iconfont/dist/material-design-icons.css',
+    'animate.css/animate.min.css'
   ],
   plugins: [
     '@/plugins/vuetify',

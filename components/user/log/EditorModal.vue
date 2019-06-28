@@ -91,11 +91,15 @@
     };
 
     mounted () {
-      this.$on('open', id => this.loadData(id));
+      this.$on('open', id => {
+        this.loadData(id);
+        this.$nextTick(() => {
+          this.dialog = true;
+        })
+      });
     }
 
     loadData (id) {
-      this.dialog = true;
       this.loading = true;
       (id && this.$axios.get('/ajax/admin/user/userLog/show?id=' + id).then(response => {
         const data: {

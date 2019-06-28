@@ -18,7 +18,7 @@ import { SnackbarInstanceProp } from '~/types';
             this['close']();
           }
         }
-      }, ['关闭']));
+      }, ['确定']));
     }
     buttons.unshift(this['text']);
     return createElement(VSnackbar, {
@@ -59,7 +59,7 @@ class SnackbarInstanceComponent extends Vue {
 
   @Emit()
   close () {
-    this['visible'] = false;
+    this.visible = false;
     this.$children[0].$emit('input', false);
   }
 
@@ -94,6 +94,7 @@ function getSnackbarInstance (): SnackbarInstanceComponent {
 const messageList: Partial<SnackbarInstanceProp>[] = [];
 
 function confirm (props: Partial<SnackbarInstanceProp>) {
+  VSnackbar.remove();
   messageList.push(props);
   showNextMessage();
 }

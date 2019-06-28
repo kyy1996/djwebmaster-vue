@@ -32,7 +32,7 @@
               slot-scope="{ header }"
             >
               <span
-                class="subheading font-weight-light text-success text--darken-3"
+                class="subheading text-success text--darken-3"
               >
                 {{ header.text }}
               </span>
@@ -200,7 +200,7 @@
     }
 
     openEditModal (id) {
-      (this.$refs['editor-modal'] as any).$emit('open', id);
+      (this.$refs['editor-modal'] as Vue).$emit('open', id);
     }
 
     deleteItem (item) {

@@ -29,7 +29,7 @@
               slot-scope="{ header }"
             >
               <span
-                class="subheading font-weight-light text-success text--darken-3"
+                class="subheading text-success text--darken-3"
               >
                 {{ header.text }}
               </span>

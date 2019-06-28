@@ -1,3 +1,7 @@
+.theme--light.v-table {
+  color: rgba(0, 0, 0, 0.7);
+}
+
 .theme--light.v-table tbody tr:not(:last-child),
 .theme--light.v-table thead tr:first-child {
   border-bottom: 1px solid $table-border-color!important;
@@ -13,7 +17,7 @@ table.v-table thead tr {
 
 table.v-table tbody td {
   font-size: $font-size-general;
-  font-weight: $font-weight-lighter;
+  font-weight: $font-weight-base;
 }
 
 table.v-table tbody td:first-child, table.v-table tbody td:not(:first-child),

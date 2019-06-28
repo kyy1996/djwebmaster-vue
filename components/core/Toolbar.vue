@@ -7,7 +7,7 @@
   >
     <div class="v-toolbar-title">
       <v-toolbar-title
-        class="tertiary--text font-weight-light"
+        class="tertiary--text font-weight-regular"
       >
         <v-btn
           v-if="responsive"

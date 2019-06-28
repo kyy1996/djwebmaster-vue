@@ -135,18 +135,14 @@
         md4
       >
         <material-card class="v-card-profile" style="width: 100%;">
-          <v-avatar
+          <material-avatar-uploader
             slot="offset"
-            class="mx-auto d-block"
-            size="130"
+            v-model="user.avatar"
           >
-            <v-img
-              src="https://demos.creative-tim.com/vue-material-dashboard/img/marc.aba54d65.jpg"
-            ></v-img>
-          </v-avatar>
+          </material-avatar-uploader>
           <v-card-text class="text-xs-center">
-            <h6 class="category text-gray font-weight-thin mb-3">UID: {{ user.uid }}</h6>
-            <h6 class="category text-gray font-weight-thin mb-3">{{ user.stu_no }}</h6>
+            <h6 class="category text-gray mb-3">UID: {{ user.uid }}</h6>
+            <h6 class="category text-gray mb-3">{{ user.stu_no }}</h6>
             <h4 class="card-title font-weight-light">{{ user.school + user.stu_class }}</h4>
             <h4 class="card-title font-weight-light">{{ user.name }}</h4>
             <h4 class="card-title font-weight-light">{{ user.email }}</h4>
@@ -161,9 +157,10 @@
 <script>
   import MaterialCard from '~/components/material/Card.vue';
   import { VTextField } from 'vuetify/lib';
+  import MaterialAvatarUploader from "../../../components/material/AvatarUploader";
 
   export default {
-    components: { MaterialCard, VTextField },
+    components: { MaterialAvatarUploader, MaterialCard, VTextField },
     async asyncData ({ $axios }) {
       const response = await $axios.get('/page/admin/common/welcome/index');
       const data = response.data.user;

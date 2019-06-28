@@ -24,11 +24,11 @@
         <template v-else>
           <h4
             v-if="title"
-            class="title font-weight-light mb-2"
+            class="title mb-2"
             v-text="title"></h4>
           <p
             v-if="text"
-            class="category font-weight-thin"
+            class="category font-weight-medium"
             v-text="text"></p>
         </template>
       </v-card>

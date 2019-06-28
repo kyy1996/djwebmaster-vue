@@ -1,8 +1,15 @@
 <template>
   <div>
-    <slot :data="value" v-if="value">
-      {{ value }}
-    </slot>
+    <transition
+      name="fade"
+      mode="out-in"
+      enter-active-class="animated fadeIn"
+      leave-active-class="animated fadeOut"
+    >
+      <slot :data="value" v-if="value || alwaysShow">
+        {{ value }}
+      </slot>
+    </transition>
     <div
       class="uploader__btn-group"
       :class="{
@@ -10,7 +17,7 @@
       }"
       v-if="btn.length > 0">
       <v-btn
-        v-if="checkBtn('upload')"
+        v-if="hasUploadBtn"
         color="success"
         class="uploader__upload-btn"
         @click="clickUploadBtn"
@@ -19,7 +26,7 @@
         <v-icon right dark>cloud_upload</v-icon>
       </v-btn>
       <v-btn
-        v-if="checkBtn('delete') && value"
+        v-if="hasDeleteBtn && value"
         class="text--white uploader__delete-btn"
         color="danger"
         @click="deleteFile"
@@ -49,7 +56,6 @@
     }
   })
   export default class MaterialUploader extends Vue {
-    pageLoading!: boolean;
     @Prop({
       type: String
     })
@@ -61,7 +67,7 @@
     title!: string;
     @Prop({
       type: String,
-      default: ''
+      default: '/blog/images'
     })
     directory!: string;
     @Prop({
@@ -69,6 +75,16 @@
       default: ''
     })
     accept!: string;
+    @Prop({
+      type: Number,
+      default: 1024 * 1024 * 10
+    })
+    maxSize!: number;
+    @Prop({
+      type: Boolean,
+      default: false
+    })
+    alwaysShow?: boolean;
 
     @Prop({
       type: Array,
@@ -85,32 +101,40 @@
     })
     btn!: string[];
 
-    clickUploadBtn () {
-      let $ref = this.$refs['input'] as any;
+    clickUploadBtn (): void {
+      let $ref = this.$refs['input'] as HTMLInputElement;
       $ref.value = '';
       $ref.click();
     }
 
-    checkBtn (buttonName) {
+    checkBtn (buttonName): boolean {
       return this.btn.indexOf(buttonName) >= 0;
+    }
+
+    get hasDeleteBtn (): boolean {
+      return this.checkBtn('delete');
+    }
+
+    get hasUploadBtn (): boolean {
+      return this.checkBtn('upload');
     }
 
     @Emit()
     async upload (event) {
-      if (!event.target.files || event.target.files.length <= 0) return false;
-      const file = event.target.files[0];
-      console.log(file);
-      this.pageLoading = true;
+      if (!event.target.files || event.target.files.length <= 0) return this.value;
+      const file = event.target.files[0] as File;
+      if (this.maxSize > 0 && file.size > this.maxSize) {
+        this.$snackbar.error(`文件大小${ Math.round(file.size / 1024) }KB超过${ Math.round(this.maxSize / 1024) }KB限制`);
+        return this.value;
+      }
       const formData = new FormData();
       formData.append('file', file);
-      formData.append('directory', '/blog/images');
-      console.log(formData.getAll('file'));
+      formData.append('directory', this.directory);
       const data: Response<Attachment> = await this.$axios.$post('/ajax/admin/attachment/attachment/upload', formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
-      this.pageLoading = false;
-      console.log(data);
       if (+data.code === 0 && data.data && data.data.url) {
+        this.$snackbar.success('上传成功');
         return data.data.url;
       }
       return this.value;

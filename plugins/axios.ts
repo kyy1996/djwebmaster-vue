@@ -49,7 +49,7 @@ export default function ({ $axios, store, req, redirect }) {
     const data = response!.data as Response<any> || {};
     if (data.code === 10011) {
       // 用户未登录
-      if (process.client) {
+      if (process.client && window && window.localStorage) {
         window.localStorage.clear();
       }
       store.commit('user/logoutUser');
@@ -57,11 +57,15 @@ export default function ({ $axios, store, req, redirect }) {
     }
     if (data.code === 10004) {
       // 参数错误
-      let errors = [];
+      let errors: string[] = [];
       if (data.data.hasOwnProperty('detail')) {
         for (const key in data.data.detail) {
-          if (data.data.detail.hasOwnProperty(key) && data.data.detail[key] instanceof Array) {
-            errors = errors.concat(data.data.detail[key]);
+          if (data.data.detail.hasOwnProperty(key)) {
+            if (data.data.detail[key] instanceof Array) {
+              errors = errors.concat(data.data.detail[key]);
+            } else if (typeof data.data.detail[key] === 'string') {
+              errors.push(data.data.detail[key]);
+            }
           }
         }
       }
